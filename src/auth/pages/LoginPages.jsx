@@ -3,9 +3,10 @@ import { Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { AuthLayout } from "../layout/AuthLayout"
 import { Link as RouterLink } from 'react-router-dom'
 import { useForm } from "../../hooks/useForm"
-import { useState } from "react"
-import { startGoogleSignIn } from "../../store/auth/thunks"
+import {useEffect, useState} from "react"
+import { startGoogleSignIn, startLoginWithEmailPassword } from "../../store/auth/thunks"
 import { useDispatch, useSelector } from "react-redux"
+import Swal from "sweetalert2";
 
 const formData = {
   email: '',
@@ -31,6 +32,8 @@ export const LoginPages = () => {
   } = useForm(formData, formValidations)
 
   const [isSubmited, setSubmited] = useState(false)
+  const {primary, secondary} = useSelector(state => state.theme)
+  const {errorMessage} = useSelector(state => state.auth)
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -45,7 +48,17 @@ export const LoginPages = () => {
     dispatch(startGoogleSignIn())
   }
 
-  const {primary, secondary} = useSelector(state => state.theme)
+  const onStartLoginWithEmailPassword = () => {
+    if (!isFormValid) return
+    dispatch(startLoginWithEmailPassword(formState))
+  }
+
+  useEffect(() => {
+    console.log(errorMessage)
+    if(errorMessage !== undefined){
+      Swal.fire('Error en el login', errorMessage, 'error')
+    }
+  },[errorMessage])
 
   return (
     <AuthLayout title="Login">
@@ -81,7 +94,11 @@ export const LoginPages = () => {
 
           <Grid container sx={{ mb: 2, mt: 1 }} spacing={2} >
             <Grid item xs={12}>
-              <Button variant="contained" fullWidth type='sumbit' sx={{backgroundColor: primary}}><Typography>Sign In</Typography></Button>
+              <Button
+                      variant="contained" fullWidth type='sumbit'
+                      sx={{backgroundColor: primary}} onClick={onStartLoginWithEmailPassword}>
+                <Typography>Sign In</Typography>
+              </Button>
             </Grid>
 
             <Grid item xs={12}>

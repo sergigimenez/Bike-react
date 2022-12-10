@@ -11,7 +11,6 @@ export const RoutePages = () => {
     dispatch(handleSetRoutes())
   }, [])
 
-
   const theme = useSelector(state => state.theme)
   const routes = useSelector(state => state.card)
 
