@@ -15,7 +15,7 @@ export const Navbar = ({ styleColor, onHandleClickMenu, isLayout }) => {
 
     const dispatch = useDispatch()
 
-    const onLogout = () => {
+    const onHandleLogout = () => {
         dispatch(startLogout())
     }
 
@@ -60,7 +60,7 @@ export const Navbar = ({ styleColor, onHandleClickMenu, isLayout }) => {
                         |
                         <Avatar sx={{ width: 24, height: 24, ml: 1, mr: 1 }} alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
                         |
-                        <IconButton sx={{ color: color }} onClick={onLogout}>
+                        <IconButton sx={{ color: color }} onClick={onHandleLogout}>
                             <Logout></Logout>
                         </IconButton>
                     </div>

@@ -8,9 +8,12 @@ export const cardSlice = createSlice({
     reducers: {
         setCard: (state, action) => {
             state.cards.push(action.payload)
+        },
+        initialCards :(state, action) => {
+            state.cards = []
         }
     }
 });
 
 
-export const { setCard } = cardSlice.actions;
+export const { setCard, initialCards } = cardSlice.actions;

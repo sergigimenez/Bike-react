@@ -1,55 +1,35 @@
 import { setCard } from "./cardSlice"
+import { onFollowCards } from "../auth/authSlice"
+import {bikeMernApi} from "../../api/index.js";
 
-const iniRoutes = [
-    {
-        id: 1,
-        img: `/assets/cbr.jpg`,
-        titleCard: 'Catalunya Bike Race',
-        info: [
-            ['Distancia', '50km'],
-            ['Desnivel', '1700m+'],
-            ['Fecha', '30/09/2022'],
-            ['Precio', '35.5€']
-        ],
-        stateComents: '26 Likes - 2 comentarios',
-        comments: [
-            {
-                id: 1,
-                nameComent: 'Sergi Gimenez',
-                dateComent: '21/09/2021',
-                textComent: '3 dias en el corazon de Catalunya'
-            }
-        ]
-    },
-    {
-        id: 2,
-        img: `/assets/cln_triste.jpg`,
-        titleCard: 'Colina Triste',
-        info: [
-            ['Distancia', '90km'],
-            ['Desnivel', '2300m+'],
-            ['Fecha', '16/05/2023'],
-            ['Precio', '135.5€']
-        ],
-        stateComents: '100 Likes - 9 comentarios',
-        comments: [
-            {
-                id: 1,
-                nameComent: 'Cristobal Catalan',
-                dateComent: '24/03/2022',
-                textComent: 'Una carrera muy exigente'
-            }
-        ]
-    }
-]
-
+/*Cargar las rutas de la BD*/
 export const handleSetRoutes = () => {
     return async (dispatch, getState) => {
-        iniRoutes.forEach(route => {
-            dispatch(setCard(route))
-        })
+        try {
+            const {data} = await bikeMernApi.get('/cards')
+
+            data.msg.forEach(route => {
+                dispatch(setCard(route))
+            })
+        }catch (e){
+            console.log(e.response.data.error) //TODO GESTIONAR ERRORES AL LEER CARDS
+        }
     }
 }
+/*Cargar las rutas de la BD*/
+
+/*Añadir nueva ruta a la BD */
+export const setCardAPI = (route) => {
+    return async (dispatch) => {
+        try {
+            const {data} = await bikeMernApi.post('/cards',route)
+            dispatch(setCard(data.payload))
+        }catch (e){
+            console.log(e.response.data.error) //TODO GESTIONAR ERRORES AL AÑADIR CARDS
+        }
+    }
+}
+/*Añadir nueva ruta a la BD */
 
 /*Upload Image */
 export const uploadImage = (file, titulo) => {
@@ -86,3 +66,54 @@ export const fileUpload = async (file, titulo) => {
     }
 }
 /*Upload Image */
+
+/*Follow & Unfollow Route */
+export const getCardByUserId = () => {
+    return async(dispatch) => {
+        try{
+            const {data} = await bikeMernApi.get('/cards/user')
+
+            return data.usuarioCards
+        }catch(e){
+            console.log(e.response.data.error) //TODO GESTIONAR ERRORES AL OBTENER CARTAS POR USUARIO CARDS
+        }
+    }
+}
+
+export const followCardByUser = (idCard) => {
+    return async (dispatch, getState) => {
+        try{
+            await bikeMernApi.post('/cards/follow',
+            {
+                "uid": getState().auth.uid,
+                "cards": [idCard]
+            })
+
+            const {data} = await bikeMernApi.get('/cards/user')
+
+            dispatch(onFollowCards(data.usuarioCards))
+        }catch(e){
+            console.log(e.response.data.error) //TODO GESTIONAR ERRORES AL FOLLOW CARDS
+        }
+    }
+}
+
+export const unfollowCardByUser = (idCard) => {
+    return async (dispatch, getState) => {
+        try{
+            await bikeMernApi.post('/cards/unfollow',
+            {
+                "uid": getState().auth.uid,
+                "cards": [idCard]
+            })
+
+            const {data} = await bikeMernApi.get('/cards/user')
+
+            dispatch(onFollowCards(data.usuarioCards))
+        }catch(e){
+            console.log(e.response.data.error) //TODO GESTIONAR ERRORES AL UNFOLLOW CARDS
+        }
+    }
+}
+
+/*Follow & Unfollow Route */

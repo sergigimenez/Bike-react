@@ -1,4 +1,5 @@
 import { ImageList, ImageListItem, Typography } from '@mui/material';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Card } from '../Card/Card'
 
@@ -69,6 +70,12 @@ export const Main = () => {
     const routes = useSelector(state => state.card)
     const theme = useSelector(state => state.theme)
 
+    const CardMemorized = useMemo(() => {
+        return routes.cards.slice(25, 30).map(route => (
+          <Card key={route.id+(Math.random() + 1).toString(36).substring(7)} route={route} theme={theme} cardStyleMobile={true}></Card>
+        ))
+      }, [routes])
+
     return (
         <div className='col-lg-12 d-flex justify-between flex-column flex-lg-row'>
             <div className='col-lg-6 col-12 d-flex flex-column'>
@@ -110,11 +117,7 @@ export const Main = () => {
                 </div>
             </div>
             <div className='col-12 offset-lg-0 col-lg-6 d-flex flex-column align-items-center' style={{ maxHeight: 800, overflow: 'overlay' }}>
-                {
-                    routes.cards.map(route => (
-                        <Card key={route.id + (Math.random() + 1).toString(36).substring(7)} route={route} theme={theme} cardStyleMobile={true}></Card>
-                    ))
-                }
+                {CardMemorized}
             </div>
         </div>
     )

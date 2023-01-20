@@ -7,6 +7,7 @@ import {useEffect, useState} from "react"
 import { startGoogleSignIn, startLoginWithEmailPassword } from "../../store/auth/thunks"
 import { useDispatch, useSelector } from "react-redux"
 import Swal from "sweetalert2";
+import {Loader} from "../../routes/Loader";
 
 const formData = {
   email: '',
@@ -33,7 +34,7 @@ export const LoginPages = () => {
 
   const [isSubmited, setSubmited] = useState(false)
   const {primary, secondary} = useSelector(state => state.theme)
-  const {errorMessage} = useSelector(state => state.auth)
+  const {errorMessage, status} = useSelector(state => state.auth)
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -54,7 +55,6 @@ export const LoginPages = () => {
   }
 
   useEffect(() => {
-    console.log(errorMessage)
     if(errorMessage !== undefined){
       Swal.fire('Error en el login', errorMessage, 'error')
     }

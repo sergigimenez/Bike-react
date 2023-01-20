@@ -9,9 +9,9 @@ import './style.css'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
-        <BrowserRouter>
-          <BikeApp></BikeApp>
-        </BrowserRouter>
+      <BrowserRouter>
+        <BikeApp></BikeApp>
+      </BrowserRouter>
     </Provider>
-  </React.StrictMode>
+    </React.StrictMode>
 )

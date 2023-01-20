@@ -1,1 +1,1 @@
-export * from './bikeMernApi.js'
+export {default as bikeMernApi} from './bikeMernApi.js'

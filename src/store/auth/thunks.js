@@ -1,5 +1,6 @@
 import { loginWithEmailPassword, logoutFirebase, registerUserWithEmailPassword, singInWithGoogle } from "../../firebase/providers"
 import { checkingCredentials, onLogin, onLogout, onFailLogout, clearErrorMessage } from "./authSlice"
+import {initialCards} from "../Card/cardSlice.js"
 import {bikeMernApi} from "../../api";
 
 export const startGoogleSignIn = () => {
@@ -8,7 +9,7 @@ export const startGoogleSignIn = () => {
 
         const result = await singInWithGoogle();
 
-        if (!result.ok) return dispatch(onLogout(result.errorMessage))
+        if (!result.ok) return dispatch(startLogout(result.errorMessage))
 
         return dispatch(onLogin(result))
     }
@@ -22,8 +23,8 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
             const {data} = await bikeMernApi.post('/auth',{email,password})
             localStorage.setItem('token', data.token)
             localStorage.setItem('token-init-date', new Date().getTime())
-
-            dispatch(onLogin({name: data.name, uid: data.uid, cards: data.cards}))
+            
+            dispatch(onLogin({name: data.name, uid: data.uid, email: data.email, cards: data.cards}))
         }catch (error){
             dispatch(onFailLogout('Credenciales incorrectas'))
             setTimeout(function (){
@@ -33,34 +34,30 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
     }
 }
 
-/*export const startCreateUserWithEmailPassword = ({ email, password, displayName }) => {
+export const checkAuthToken = () => {
     return async (dispatch) => {
+        const token = localStorage.getItem('token')
+        if(!token){
+            return dispatch(startLogout())
+        }
 
-        dispatch(checkingCredentials())
-
-        const { ok, uid, photoURL, errorMessage } = await registerUserWithEmailPassword({ email, password, displayName })
-
-        if (!ok) return dispatch(onLogout({ errorMessage }))
-
-        return dispatch(onLogin({ uid, displayName, email, photoURL }))
+        try {
+            const {data} = await bikeMernApi.get('/auth/renew')
+            localStorage.setItem('token', data.token)
+            localStorage.setItem('token-init-date', new Date().getTime())
+            dispatch(onLogin({name: data.name, uid: data.uid, email: data.email, cards: data.cards}))
+        }catch (e){
+            localStorage.clear()
+            dispatch(startLogout())
+        }
     }
 }
 
-export const startLoginWithEmailPassword = ({ email, password }) => {
+export const startLogout = (errorMessage) => {
     return async (dispatch) => {
-        dispatch(checkingCredentials())
-
-        const { ok, errorMessage, uid, photoURL, displayName } = await loginWithEmailPassword({ email, password })
-
-        if (!ok) return dispatch(onLogout({ errorMessage }))
-
-        return dispatch(onLogin({ uid, displayName, email, photoURL }))
-    }
-}*/
-
-export const startLogout = () => {
-    return async (dispatch) => {
-        await logoutFirebase()
-        dispatch(onLogout({}))
+        //await logoutFirebase()
+        localStorage.clear()
+        dispatch(initialCards())
+        dispatch(onLogout(errorMessage))
     }
 }

@@ -1,8 +1,8 @@
-import { Avatar, Button, ButtonGroup, IconButton, Link, Typography, useMediaQuery } from '@mui/material';
+import { Avatar, Button, ButtonGroup, IconButton, Link, Popper, Typography, useMediaQuery } from '@mui/material';
 import { CardAvatarGroup } from './CardAvatarGroup'
-import React from 'react'
-import { ArrowDropDown, Comment, Facebook, Favorite, InsertLink, Instagram, ThumbUp, Twitter } from '@mui/icons-material';
-import { useSelector } from 'react-redux';
+import { ArrowDropDown, Comment, Facebook, Favorite, InsertLink, Instagram, ThumbUp, Twitter} from '@mui/icons-material';
+import { FollowModule } from './FollowModule';
+import React from 'react';
 
 const styles = {
     desktop: {
@@ -36,9 +36,8 @@ const styles = {
 }
 
 export const Card = ({ theme, route, cardStyleMobile }) => {
-
-    const { primary, title } = theme
-    const { img, titleCard, info, stateComents, comments } = route
+    const { primary, title, secondary } = theme
+    const { img, titleCard, info, stateComents, comments, id } = route
 
     var isVisible = 'hidden'
     if(comments.length >= 1){
@@ -75,20 +74,22 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
                 </div>
                 {(cardStyleMobile || !mediaQuery) && <CardAvatarGroup stateComents={stateComents} mediaQuery={mediaQuery} cardStyleMobile={cardStyleMobile}></CardAvatarGroup>}
                 <div className='col-sm-12 col-md-8 d-flex flex-column justify-content-evenly' style={{ height: cardContainer_2.height }}>
-                    <Typography variant='h6' sx={{ color: primary, fontSize: "1.15rem" }}>{titleCard}</Typography>
+                    <FollowModule primary={primary} secondary={secondary} titleCard={titleCard} id={id}></FollowModule>
                     <ul className="list-group list-group-horizontal justify-content-around lastElememtNoneBorderRight" style={{ marginBottom: "5px", maxWidth: "400px" }}>
                         {
-                            info.map(element => {
-                                return (
-                                    <li
-                                        className="list-group-item d-flex flex-column align-items-end justify-content-center"
-                                        style={{ borderLeft: 0, borderTop: 0, borderBottom: 0, height: "50px", padding: "8px 8px" }}
-                                        key={element[0]}
-                                    >
-                                        <Typography variant='h6' sx={{ color: title, mb: 0, fontSize: "1rem" }}>{element[0]}</Typography>
-                                        <Typography variant='p' sx={{ fontSize: "0.8rem", mt: "-8px" }}>{element[1]}</Typography>
-                                    </li>
-                                )
+                            Object.keys(info).map(keyElement => {
+                                if(keyElement == "Distancia" || keyElement == "Desnivel" || keyElement == "Fecha" || keyElement == "Poblacion"){
+                                    return (
+                                        <li
+                                            className="list-group-item d-flex flex-column align-items-end justify-content-center"
+                                            style={{ borderLeft: 0, borderTop: 0, borderBottom: 0, height: "50px", padding: "8px 8px" }}
+                                            key={keyElement}
+                                        >
+                                            <Typography variant='h6' sx={{ color: title, mb: 0, fontSize: "1rem" }}>{keyElement}</Typography>
+                                            <Typography variant='p' sx={{ fontSize: "0.8rem", mt: "-8px" }}>{info[keyElement]}</Typography>
+                                        </li>
+                                    )
+                                }
                             })
                         }
                     </ul>
@@ -108,7 +109,7 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
                             </div>
                         </div>
                     </div>
-                    <Typography variant="caption" sx={{visibility: isVisible}}><ArrowDropDown /><Link>Ver mas comentarios</Link></Typography>
+                    <Typography variant="caption" sx={{visibility: 'visible'}}><ArrowDropDown /><Link>Ver mas comentarios</Link></Typography>
                 </div>
             </div>
         </>
