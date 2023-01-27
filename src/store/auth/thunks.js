@@ -1,6 +1,6 @@
 import { loginWithEmailPassword, logoutFirebase, registerUserWithEmailPassword, singInWithGoogle } from "../../firebase/providers"
 import { checkingCredentials, onLogin, onLogout, onFailLogout, clearErrorMessage } from "./authSlice"
-import {initialCards} from "../Card/cardSlice.js"
+import {clearCards} from "../Card/cardSlice.js"
 import {bikeMernApi} from "../../api";
 
 export const startGoogleSignIn = () => {
@@ -57,7 +57,7 @@ export const startLogout = (errorMessage) => {
     return async (dispatch) => {
         //await logoutFirebase()
         localStorage.clear()
-        dispatch(initialCards())
+        dispatch(clearCards())
         dispatch(onLogout(errorMessage))
     }
 }

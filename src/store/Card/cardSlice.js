@@ -3,17 +3,33 @@ import { createSlice } from '@reduxjs/toolkit';
 export const cardSlice = createSlice({
     name: 'card',
     initialState: {
-        cards: []
+        cards: [],
+        provincias: [],
+        titleCard: [],
+        statusSearch: 'not-searched',
+        totalResults: 0
     },
     reducers: {
-        setCard: (state, action) => {
-            state.cards.push(action.payload)
-        },
-        initialCards :(state, action) => {
+        clearCards: (state) => {
             state.cards = []
+        },
+        setCard: (state, action) => {
+            state.cards = action.payload
+        },
+        setProvincias: (state, action) => {
+            state.provincias = action.payload
+        },
+        setTitleCard: (state, action) => {
+            state.titleCard = action.payload
+        },
+        setStatusSearch: (state) => {
+            state.statusSearch = 'searched'
+        },
+        setTotalResults: (state, action) => {
+            state.totalResults = action.payload
         }
     }
 });
 
 
-export const { setCard, initialCards } = cardSlice.actions;
+export const { clearCards, setCard, setProvincias, setTitleCard, setStatusSearch, setTotalResults } = cardSlice.actions;
