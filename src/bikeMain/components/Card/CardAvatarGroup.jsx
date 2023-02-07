@@ -1,7 +1,13 @@
 import { Comment, ThumbUp } from '@mui/icons-material';
 import { Avatar, AvatarGroup, Button, Typography } from '@mui/material'
+import { useState } from 'react';
 
-export const CardAvatarGroup = ({ stateComents, mediaQuery, isVisible, cardStyleMobile }) => {
+export const CardAvatarGroup = ({ stateComents, mediaQuery, isVisible, cardStyleMobile, onLike, cardLiked }) => {
+    const [cardStatusLiked, setCardStatusLiked] = useState(cardLiked)
+    const onHandleLike = () => {
+        setCardStatusLiked(onLike())
+    }
+
     return (
         <>
             <div className='container'>
@@ -18,7 +24,7 @@ export const CardAvatarGroup = ({ stateComents, mediaQuery, isVisible, cardStyle
                     {
                         (mediaQuery && !cardStyleMobile) &&
                         <div className='col-md-4 d-flex justify-content-center'>
-                            <Button variant='outlined' sx={{ color: "black", mr: 0.5 }}><ThumbUp /></Button>
+                            <Button onClick={onHandleLike} variant='outlined' sx={{ color: "black", mr: 0.5, backgroundColor: cardStatusLiked }}><ThumbUp /></Button>
                             <Button variant="outlined" sx={{ color: "black", ml: 0.5 }}><Comment /></Button>
                         </div>
                     }

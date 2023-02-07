@@ -25,7 +25,7 @@ export const DesktopLayout = ({ objLayout }) => {
                             >
                                 <SideBarDesktop styleColor={{ color }} stateMenu={stateMenu} menuItems={menuItems}/>
                             </div>
-                            <div style={{ backgroundColor: background, width: `calc(100vw - ${sideBarWidth}px)`, padding: paddingCard ,paddingTop: paddingCard }}>
+                            <div style={{ backgroundColor: background,  width: `calc(100vw - ${sideBarWidth}px)`, padding: paddingCard ,paddingTop: paddingCard }}>
                                 {children}
                             </div>
                         </div>

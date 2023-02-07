@@ -9,6 +9,7 @@ export const authSlice = createSlice({
         email: '',
         password: '',
         cards: [],
+        cardsLiked: [],
         photoUrl: null,
         errorMessage: undefined
     },
@@ -23,6 +24,7 @@ export const authSlice = createSlice({
             state.email = payload.email
             state.displayName = payload.name
             state.cards = payload.cards
+            state.cardsLiked = payload.cardsLiked
             state.errorMessage = undefined
         },
         onLogout: (state, {payload}) => {
@@ -32,6 +34,7 @@ export const authSlice = createSlice({
             state.email = ''
             state.password = ''
             state.cards = ''
+            state.cardsLiked = ''
             state.photoUrl = ''
             state.errorMessage = undefined
         },
@@ -44,9 +47,12 @@ export const authSlice = createSlice({
         },
         onFollowCards: (state, {payload}) => {
             state.cards = payload
+        },
+        onLikeCards: (state, {payload}) => {
+            state.cardsLiked = payload
         }
     }
 });
 
 
-export const { checkingCredentials,onLogin,onLogout, onFailLogout, clearErrorMessage, onFollowCards } = authSlice.actions;
+export const { checkingCredentials,onLogin,onLogout, onFailLogout, clearErrorMessage, onFollowCards, onLikeCards } = authSlice.actions;

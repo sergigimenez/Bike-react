@@ -1,5 +1,5 @@
-import { clearCards, setCard, setProvincias, setTitleCard, setStatusSearch, setTotalResults } from "./cardSlice"
-import { onFollowCards } from "../auth/authSlice"
+import { clearCards, setCard, setProvincias, setPoblaciones, setTitleCard, setStatusSearch, setTotalResults, updateLikesOneCard } from "./cardSlice"
+import { onFollowCards, onLikeCards } from "../auth/authSlice"
 import { bikeMernApi } from "../../api/index.js";
 import { async } from "@firebase/util";
 
@@ -7,7 +7,7 @@ import { async } from "@firebase/util";
 export const handleSetRoutes = (numPage) => {
     return async (dispatch, getState) => {
         try {
-            const { data } = await bikeMernApi.get(`/cards/num/${(numPage-1)*25}`)
+            const { data } = await bikeMernApi.get(`/cards/num/${(numPage - 1) * 25}`)
 
             dispatch(clearCards())
 
@@ -24,7 +24,6 @@ export const handleSetRoutes = (numPage) => {
 export const getProvinciasThunks = () => {
     return async (dispatch) => {
         try {
-            console.log("entra prov")
             const { data } = await bikeMernApi.get('/cards/provincias')
 
             dispatch(setProvincias(data.resp))
@@ -34,14 +33,27 @@ export const getProvinciasThunks = () => {
     }
 }
 
-/*Obetener todas las provincias*/
+/*Obetener todas las poblaciones*/
+
+export const getPoblacionesThunks = () => {
+    return async (dispatch) => {
+        try {
+            const { data } = await bikeMernApi.get('/cards/poblaciones')
+
+            dispatch(setPoblaciones(data.resp))
+        } catch (e) {
+            console.log(e.response.data.error) //TODO GESTIONAR ERRORES AL LEER CARDS
+        }
+    }
+}
+
+/*Obetener todas las poblaciones*/
 
 /*Obetener todos los titulos de las carreras*/
 
 export const getTitleCardThunks = () => {
     return async (dispatch) => {
         try {
-            console.log("entra carreras")
             const { data } = await bikeMernApi.get('/cards/titleCard')
 
             dispatch(setTitleCard(data.resp))
@@ -54,13 +66,13 @@ export const getTitleCardThunks = () => {
 /*Obetener todos los titulos de las carreras*/
 
 /*Añadir nueva ruta a la BD */
-export const searchCard = (numPage, fieldProvincias, fieldTitleCarreras, fieldDistancia, fieldDesnivel) => {
+export const searchCard = (numPage, fieldProvincias, fieldPoblaciones, fieldTitleCarreras, fieldDistancia, fieldDesnivel) => {
     return async (dispatch) => {
         try {
             let query = {
                 "params": {
-                    "provincias": fieldProvincias.length != 0 ? fieldProvincias.map(prov => prov.sigla): [],
-                    "poblacion": [],
+                    "provincias": fieldProvincias.length != 0 ? fieldProvincias.map(prov => prov.sigla) : [],
+                    "poblacion": fieldPoblaciones.length != 0 ? fieldPoblaciones.map(pob => pob.poblacion) : [],
                     "titleCard": fieldTitleCarreras != null ? fieldTitleCarreras.titleCard : null,
                     "distancia": {
                         "gte": fieldDistancia[0],
@@ -74,11 +86,11 @@ export const searchCard = (numPage, fieldProvincias, fieldTitleCarreras, fieldDi
                 }
             }
 
-            const { data } = await bikeMernApi.post(`/cards/search/${(numPage-1)*25}`, query)
+            const { data } = await bikeMernApi.post(`/cards/search/${(numPage - 1) * 25}`, query)
 
             dispatch(clearCards())
             dispatch(setStatusSearch())
-            dispatch(setTotalResults(Math.ceil(data.totalResults/25)))
+            dispatch(setTotalResults(Math.ceil(data.totalResults / 25)))
 
             dispatch(setCard(data.resp))
         } catch (e) {
@@ -138,18 +150,6 @@ export const fileUpload = async (file, titulo) => {
 /*Upload Image */
 
 /*Follow & Unfollow Route */
-export const getCardByUserId = () => {
-    return async (dispatch) => {
-        try {
-            const { data } = await bikeMernApi.get('/cards/user')
-
-            return data.usuarioCards
-        } catch (e) {
-            console.log(e.response.data.error) //TODO GESTIONAR ERRORES AL OBTENER CARTAS POR USUARIO CARDS
-        }
-    }
-}
-
 export const followCardByUser = (idCard) => {
     return async (dispatch, getState) => {
         try {
@@ -187,3 +187,26 @@ export const unfollowCardByUser = (idCard) => {
 }
 
 /*Follow & Unfollow Route */
+
+/*Like Route */
+
+export const likeRouteByUser = (idCard) => {
+    return async (dispatch, getState) => {
+        try {
+            const resp = await bikeMernApi.post('/cards/like',
+                {
+                    "uid": getState().auth.uid,
+                    "cardId": idCard
+                })
+            //dispatch(updateLikesOneCard({idCard, totalLikes: resp.data.totalLikes}))
+
+            const { data } = await bikeMernApi.get('/cards/user')
+            dispatch(onLikeCards(data.cardsLiked))
+
+        } catch (e) {
+            console.log(e.response.data.error) //TODO GESTIONAR ERRORES AL UNFOLLOW CARDS
+        }
+    }
+}
+
+/*Like Route */

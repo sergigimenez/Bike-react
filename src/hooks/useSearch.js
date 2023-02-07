@@ -1,14 +1,15 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { getProvinciasThunks, getTitleCardThunks } from "../store/Card/thunks"
+import { getProvinciasThunks, getTitleCardThunks, getPoblacionesThunks } from "../store/Card/thunks"
 
 export const useSerch = () => {
 
     const dispatch = useDispatch()
-    const { provincias, titleCard } = useSelector(state => state.card)
+    const { provincias, poblaciones,  titleCard } = useSelector(state => state.card)
     const [fieldProvincias, setFieldProvincias] = useState([])
+    const [fieldPoblaciones, setFieldPoblaciones] = useState([])
     const [fieldTitleCarreras, setFieldTitleCarreras] = useState([])
-    const [fieldDistancia, setDistancia] = useState([30, 50])
+    const [fieldDistancia, setDistancia] = useState([null, null])
     const [fieldDesnivel, setDesnivel] = useState([null, null])
 
     const minDesnivel = 100
@@ -81,9 +82,16 @@ export const useSerch = () => {
     const onFocusGetTitleCarreras = () => {
         titleCard.length <= 0 ? dispatch(getTitleCardThunks()) : null
     }
+    const onFocusGetPoblaciones = () => {
+        titleCard.length <= 0 ? dispatch(getPoblacionesThunks()) : null
+    }
 
     const setFieldProvinciasHook = (value) => {
         setFieldProvincias(value)
+    }
+
+    const setFieldPoblacionesHook = (value) => {
+        setFieldPoblaciones(value)
     }
 
     const setFieldTitleCarrerasHook = (value) => {
@@ -130,11 +138,15 @@ export const useSerch = () => {
         marksDesnivel,
         marksDistancia,
         provincias,
+        poblaciones,
         titleCard,
         onFocusGetProvincias,
+        onFocusGetPoblaciones,
         onFocusGetTitleCarreras,
         fieldProvincias,
         setFieldProvinciasHook,
+        fieldPoblaciones,
+        setFieldPoblacionesHook,
         fieldTitleCarreras,
         setFieldTitleCarrerasHook,
         fieldDistancia,

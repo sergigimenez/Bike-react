@@ -5,6 +5,7 @@ export const cardSlice = createSlice({
     initialState: {
         cards: [],
         provincias: [],
+        poblaciones: [],
         titleCard: [],
         statusSearch: 'not-searched',
         totalResults: 0
@@ -19,6 +20,9 @@ export const cardSlice = createSlice({
         setProvincias: (state, action) => {
             state.provincias = action.payload
         },
+        setPoblaciones: (state, action) => {
+            state.poblaciones = action.payload
+        },
         setTitleCard: (state, action) => {
             state.titleCard = action.payload
         },
@@ -27,9 +31,16 @@ export const cardSlice = createSlice({
         },
         setTotalResults: (state, action) => {
             state.totalResults = action.payload
+        },
+        updateLikesOneCard: (state, action) => {
+            state.cards.find(c => {
+                if(c.id == action.payload.idCard){
+                    return c
+                } 
+            }).stateComents.likes = action.payload.totalLikes
         }
     }
 });
 
 
-export const { clearCards, setCard, setProvincias, setTitleCard, setStatusSearch, setTotalResults } = cardSlice.actions;
+export const { clearCards, setCard, setProvincias, setPoblaciones, setTitleCard, setStatusSearch, setTotalResults, updateLikesOneCard } = cardSlice.actions;

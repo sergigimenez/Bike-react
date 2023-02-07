@@ -24,7 +24,7 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
             localStorage.setItem('token', data.token)
             localStorage.setItem('token-init-date', new Date().getTime())
             
-            dispatch(onLogin({name: data.name, uid: data.uid, email: data.email, cards: data.cards}))
+            dispatch(onLogin({name: data.name, uid: data.uid, email: data.email, cards: data.cards, cardsLiked: data.cardsLiked}))
         }catch (error){
             dispatch(onFailLogout('Credenciales incorrectas'))
             setTimeout(function (){
@@ -45,7 +45,7 @@ export const checkAuthToken = () => {
             const {data} = await bikeMernApi.get('/auth/renew')
             localStorage.setItem('token', data.token)
             localStorage.setItem('token-init-date', new Date().getTime())
-            dispatch(onLogin({name: data.name, uid: data.uid, email: data.email, cards: data.cards}))
+            dispatch(onLogin({name: data.name, uid: data.uid, email: data.email, cards: data.cards, cardsLiked: data.cardsLiked}))
         }catch (e){
             localStorage.clear()
             dispatch(startLogout())
