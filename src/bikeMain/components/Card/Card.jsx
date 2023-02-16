@@ -1,11 +1,12 @@
 import { Avatar, Button, ButtonGroup, IconButton, Link, Popper, Typography, useMediaQuery } from '@mui/material';
 import { CardAvatarGroup } from './CardAvatarGroup'
-import { ArrowDropDown, Comment, Facebook, Favorite, InsertLink, Instagram, ThumbUp, Twitter } from '@mui/icons-material';
+import { ArrowDropDown, Comment, Facebook, Favorite, InsertLink, Instagram, ThumbUp, Twitter, YouTube } from '@mui/icons-material';
 import { FollowModule } from './FollowModule';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { likeRouteByUser } from '../../../store/Card/thunks';
+import { likeRouteByUser, uploadImage } from '../../../store/Card/thunks';
 import { useEffect } from 'react';
+import { ModalComentarios } from './ModalComentarios';
 
 const styles = {
     desktop: {
@@ -37,7 +38,6 @@ const styles = {
         }
     }
 }
-
 export const Card = ({ theme, route, cardStyleMobile }) => {
     const { primary, title, secondary, background } = theme
     const { img, titleCard, info, stateComents, comments, id } = route
@@ -47,7 +47,7 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
 
     var isVisible = 'hidden'
     if (comments.length >= 1) {
-        var { nameComent, dateComent, textComent } = comments[0]
+        var { id:idComentario, userComent, dateComent, textComent } = comments[0]
         isVisible = 'visible'
     }
 
@@ -56,6 +56,10 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
     const { card, cardContainer_1, cardContainer_2 } = style
 
     const classNameMobile = cardStyleMobile ? 'classNameMobile' : '';
+
+    const [open, setOpen] = useState(false)
+    const handleOpen = () => {setOpen(true)}
+    const handleClose = () => {setOpen(false)}
 
     const onFormatData = (keyElement, valueInfo) => {
         if (keyElement == "Distancia") {
@@ -74,23 +78,55 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
             valueInfo = new Date(valueInfo).toLocaleDateString()
         }
 
+        if (keyElement == "Web") {
+            valueInfo = <Button key={(Math.random() + 10).toString(36).substring(7)} style={{ color: primary }} target="_blank" href={valueInfo}><InsertLink /></Button>
+        }
+
+        if (keyElement == "Facebook") {
+            valueInfo = <Button key={(Math.random() + 10).toString(36).substring(7)} style={{ color: primary }} target="_blank" href={valueInfo}><Facebook /></Button>
+        }
+
+        if (keyElement == "Instagram") {
+            valueInfo = <Button key={(Math.random() + 10).toString(36).substring(7)} style={{ color: primary }} target="_blank" href={valueInfo}><Instagram /></Button>
+        }
+
+        if (keyElement == "Twitter") {
+            valueInfo = <Button key={(Math.random() + 10).toString(36).substring(7)} style={{ color: primary }} target="_blank" href={valueInfo}><Twitter /></Button>
+        }
+
+        if (keyElement == "Youtube") {
+            valueInfo = <Button key={(Math.random() + 10).toString(36).substring(7)} style={{ color: primary }} target="_blank" href={valueInfo}><YouTube /></Button>
+        }
+
         return valueInfo
     }
 
-    const cardLiked = !!user.cardsLiked.find(cardUser => {return cardUser == id}) ? background : ''
+    const [cardLiked, setCardLiked] = useState(!!user.cardsLiked.find(cardUser => { return cardUser == id }) ? background : '')
 
-    const onLike = () => {
-        console.log(id)
-        dispatch(likeRouteByUser(id))
-        return user.cardsLiked.includes(id) ? background : ''
+    useEffect(() => {
+        setCardLiked(!!user.cardsLiked.find(cardUser => { return cardUser == id }) ? background : '')
+    }, [user.cardsLiked])
+
+    const onLike = (idCard) => {
+        dispatch(likeRouteByUser(idCard))
+        return user.cardsLiked.includes(idCard) ? background : ''
     }
-    
+
+    const onUploadImage = (files) => {
+        console.log(files.target.files[0])
+        dispatch(uploadImage(files.target.files[0], titleCard, id))
+    }
+
 
     return (
         <>
             <div className={`card cardMediaQuery row d-flex flex-row align-items-center ${classNameMobile}`} style={{ height: card.height, margin: 5, border: "0.1px solid black", borderRadius: 10, maxWidth: card.maxWidth, minWidth: 325 }}>
                 <div className='col-sm-12 col-md-4 d-flex flex-column justify-content-center' style={{ height: cardContainer_1.height, minWidth: cardContainer_1.minWidth, maxWidth: cardContainer_1.maxWidth }}>
-                    <img src={img} style={{ height: "65%", width: "100%", objectFit: "cover" }}></img>
+                    <img src={img} style={{ height: "65%", width: "100%", objectFit: "contain", backgroundColor: secondary }}></img>
+                    {
+                        (img.toString() == "vacio") &&
+                        <input type="file" onChange={(files) => { onUploadImage(files) }} accept="image/*"></input>
+                    }
                     <div className='d-flex justify-content-between' style={{ marginTop: "5px" }}>
                         {
                             (cardStyleMobile || !mediaQuery) &&
@@ -100,14 +136,25 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
                             </div>
                         }
                         <ButtonGroup variant='text' size='small'>
-                            <Button style={{ color: primary }}><InsertLink /></Button>
-                            <Button style={{ color: primary }}><Instagram /></Button>
-                            <Button style={{ color: primary }}><Facebook /></Button>
-                            <Button style={{ color: primary }}><Twitter /></Button>
+                            {
+                                Object.keys(info).map(keyElement => {
+                                    if (
+                                        (keyElement == "Web" && info[keyElement][0] != null) ||
+                                        (keyElement == "Facebook" && info[keyElement][0] != null) || 
+                                        (keyElement == "Instagram" && info[keyElement][0] != null) ||
+                                        (keyElement == "Twitter" && info[keyElement][0] != null) ||
+                                        (keyElement == "Youtube" && info[keyElement][0] != null)
+                                    ) {
+                                        return (
+                                            onFormatData(keyElement, info[keyElement])
+                                        )
+                                    }
+                                })
+                            }
                         </ButtonGroup>
                     </div>
                 </div>
-                {(cardStyleMobile || !mediaQuery) && <CardAvatarGroup stateComents={stateComents} mediaQuery={mediaQuery} cardStyleMobile={cardStyleMobile} onLike={onLike} cardLiked={cardLiked}></CardAvatarGroup>}
+                {(cardStyleMobile || !mediaQuery) && <CardAvatarGroup stateComents={stateComents} mediaQuery={mediaQuery} cardStyleMobile={cardStyleMobile} id={id} onLike={onLike} cardLiked={cardLiked}></CardAvatarGroup>}
                 <div className='col-sm-12 col-md-8 d-flex flex-column justify-content-evenly' style={{ height: cardContainer_2.height }}>
                     <FollowModule primary={primary} secondary={secondary} titleCard={titleCard} id={id}></FollowModule>
                     <ul className="list-group list-group-horizontal lastElememtNoneBorderRight" style={{ marginBottom: "5px", maxWidth: "500px" }}>
@@ -133,12 +180,12 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
                             })
                         }
                     </ul>
-                    {(mediaQuery && !cardStyleMobile) && <CardAvatarGroup stateComents={stateComents} mediaQuery={mediaQuery} isVisible={isVisible} onLike={onLike} cardLiked={cardLiked}></CardAvatarGroup>}
+                    {(mediaQuery && !cardStyleMobile) && <CardAvatarGroup stateComents={stateComents} mediaQuery={mediaQuery} isVisible={isVisible} id={id} onLike={onLike} cardLiked={cardLiked}></CardAvatarGroup>}
                     <div className='container'>
                         <div className='row d-flex justify-content-between'>
                             <div className='col-sm-6 col-md-5 d-flex'>
                                 <Avatar sx={{ width: 25, height: 25, mr: 0.5, visibility: isVisible }} />
-                                <Typography variant='subtitle2'>{(typeof nameComent == 'undefined' ? '' : nameComent)}</Typography>
+                                <Typography variant='subtitle2'>{(typeof userComent == 'undefined' ? '' : userComent)}</Typography>
                             </div>
                             <div className='col-sm-6 offset-md-4 col-md-3 d-flex justify-content-end'>
                                 <Typography variant='caption'>{(typeof dateComent == 'undefined' ? '' : dateComent)}</Typography>
@@ -149,7 +196,11 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
                             </div>
                         </div>
                     </div>
-                    <Typography variant="caption" sx={{ visibility: 'visible' }}><ArrowDropDown /><Link>Ver mas comentarios</Link></Typography>
+                    <Typography variant="caption" sx={{ visibility: 'visible' }}>
+                        <ArrowDropDown />
+                        <Link onClick={handleOpen} >Ver mas comentarios</Link>
+                        <ModalComentarios onHandleClose={handleClose} state={open} primary={primary} background={background}></ModalComentarios>
+                    </Typography>
                 </div>
             </div>
         </>

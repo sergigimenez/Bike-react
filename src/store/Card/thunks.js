@@ -1,4 +1,4 @@
-import { clearCards, setCard, setProvincias, setPoblaciones, setTitleCard, setStatusSearch, setTotalResults, updateLikesOneCard } from "./cardSlice"
+import { clearCards, setCard, setProvincias, setPoblaciones, setTitleCard, setStatusSearch, setTotalResults, updateLikesOneCard, updateImage } from "./cardSlice"
 import { onFollowCards, onLikeCards } from "../auth/authSlice"
 import { bikeMernApi } from "../../api/index.js";
 import { async } from "@firebase/util";
@@ -114,10 +114,22 @@ export const setCardAPI = (route) => {
 /*Añadir nueva ruta a la BD */
 
 /*Upload Image */
-export const uploadImage = (file, titulo) => {
+export const uploadImage = (file, titulo, idCard) => {
     return async (dispatch) => {
+        let respParsed = ""
+
         if (!file) throw new Error('No tenemos ningun archivo que subir')
         const resp = fileUpload(file, titulo)
+
+
+        await resp.then(resp => {
+            respParsed = resp
+          })
+        
+        const { data } = await bikeMernApi.post('/cards/uploadImage', {cardId: idCard, newImage: respParsed})
+        
+        dispatch(updateImage(data))
+
         return resp
     }
 }
@@ -198,7 +210,8 @@ export const likeRouteByUser = (idCard) => {
                     "uid": getState().auth.uid,
                     "cardId": idCard
                 })
-            //dispatch(updateLikesOneCard({idCard, totalLikes: resp.data.totalLikes}))
+
+            //dispatch(updateLikesOneCard({ idCard, totalLikes: resp.data.totalLikes }))
 
             const { data } = await bikeMernApi.get('/cards/user')
             dispatch(onLikeCards(data.cardsLiked))

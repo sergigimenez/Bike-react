@@ -11,17 +11,22 @@ export const AuthRoutes = () => {
         <Routes>
             <Route path="login" element={<LoginPages/>}></Route>
             <Route path="register" element={<RegisterPages/>}></Route>
-            <Route path="loader" element={<Loader/>}></Route>
+            {/**<Route path="loader" element={<Loader/>}></Route>*/}
 
             {
+                /*
                 (status == "checking") &&
                 <Route path="/" element={<Navigate to="/auth/loader"/>}></Route>
+                */ 
             }
 
             {
+                /*
                 (status != "checking") &&
                 <Route path="/*" element={<Navigate to="/auth/login"/>}></Route>
+                */
             }
+            <Route path="/*" element={<Navigate to="/auth/login"/>}></Route>
         </Routes>
     )
 }

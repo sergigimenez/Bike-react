@@ -1,20 +1,21 @@
 /*SIDEBAR*/
-.sidebarItemActive{
+.sidebarItemActive {
     padding: 0;
 }
 
 .css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop,
-.css-4t3x6l-MuiPaper-root-MuiDrawer-paper{
+.css-4t3x6l-MuiPaper-root-MuiDrawer-paper {
     top: 60px !important
 }
 
-.lastElememtNoneBorderRight li:last-child{
+.lastElememtNoneBorderRight li:last-child {
     border-right: 0;
 }
+
 /*SIDEBAR*/
 
 /*DRAG AND DROP*/
-.dragAndDrop label{
+.dragAndDrop label {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -25,30 +26,41 @@
 .dragAndDrop .card {
     width: 100%;
 }
+
 /*DRAG AND DROP*/
 
 /*SEARCH*/
 .css-1xab92c-MuiInputBase-root-MuiFilledInput-root:hover:not(.Mui-disabled):before,
-.css-1xab92c-MuiInputBase-root-MuiFilledInput-root:after{
+.css-1xab92c-MuiInputBase-root-MuiFilledInput-root:after {
     border-bottom: 1px solid #B6E388 !important;
 }
+
 /*SEARCH*/
 
 /*TAB MENU // TAB SELECTED*/
-.css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected{
+.css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
     color: #1C6758 !important;
 }
-.css-1aquho2-MuiTabs-indicator{
+
+.css-1aquho2-MuiTabs-indicator {
     background-color: #1C6758 !important;
 }
+
 /*TAB MENU // TAB SELECTED*/
 
 /*LOGIN / REGISTER PAGE*/
-.css-12emu5q-MuiButtonBase-root-MuiButton-root{
+.css-12emu5q-MuiButtonBase-root-MuiButton-root {
     background-color: #1C6758 !important;
 }
 
-.css-1ojm006-MuiTypography-root-MuiLink-root:hover{
+.css-1ojm006-MuiTypography-root-MuiLink-root:hover {
     color: #B6E388 !important;
 }
+
 /*LOGIN / REGISTER PAGE*/
+
+/*SWAL ALERT*/
+.swal2-container {
+    z-index: 9999;
+}
+/*SWAL ALERT*/

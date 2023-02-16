@@ -8,6 +8,7 @@ export const cardSlice = createSlice({
         poblaciones: [],
         titleCard: [],
         statusSearch: 'not-searched',
+        statusUpdate: false,
         totalResults: 0
     },
     reducers: {
@@ -33,14 +34,24 @@ export const cardSlice = createSlice({
             state.totalResults = action.payload
         },
         updateLikesOneCard: (state, action) => {
-            state.cards.find(c => {
-                if(c.id == action.payload.idCard){
-                    return c
-                } 
-            }).stateComents.likes = action.payload.totalLikes
+            state.cards.map(c => {
+                if (c.id == action.payload.idCard) {
+                    return c.stateComents.likes = action.payload.totalLikes
+                }
+            })
+        },
+        updateImage: (state, action) => {
+            console.log(action)
+            state.cards.map(c => {
+                if (c.id == action.payload.cardId) {
+                    return c.img = action.payload.cardImg
+                }
+            })
         }
     }
 });
 
 
-export const { clearCards, setCard, setProvincias, setPoblaciones, setTitleCard, setStatusSearch, setTotalResults, updateLikesOneCard } = cardSlice.actions;
+export const { clearCards, setCard, setProvincias, setPoblaciones, setTitleCard,
+    setStatusSearch, setStatusUpdate, setTotalResults, updateLikesOneCard,
+    updateImage } = cardSlice.actions;

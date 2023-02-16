@@ -4,8 +4,8 @@ import {getEnvVariables} from "../getEnvVairables.js";
 const {VITE_API_URL, VITE_API_URL_PROD} = getEnvVariables()
 
 const bikeMernApi = axios.create({
-    //baseURL: VITE_API_URL
-    baseURL: VITE_API_URL_PROD
+    baseURL: VITE_API_URL,
+    //baseURL: VITE_API_URL_PROD
 })
 
 bikeMernApi.interceptors.request.use(config => {

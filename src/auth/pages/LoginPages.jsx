@@ -1,10 +1,10 @@
-import { Google } from "@mui/icons-material"
+import { Apple, Facebook, Google } from "@mui/icons-material"
 import { Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { AuthLayout } from "../layout/AuthLayout"
 import { Link as RouterLink } from 'react-router-dom'
 import { useForm } from "../../hooks/useForm"
 import {useEffect, useState} from "react"
-import { startGoogleSignIn, startLoginWithEmailPassword } from "../../store/auth/thunks"
+import { startGoogleSignIn, startLoginWithEmailPassword, startFacebookSignIn } from "../../store/auth/thunks"
 import { useDispatch, useSelector } from "react-redux"
 import Swal from "sweetalert2";
 import {Loader} from "../../routes/Loader";
@@ -40,13 +40,16 @@ export const LoginPages = () => {
     event.preventDefault();
     setSubmited(true)
     if (!isFormValid) return
-    console.log(formState)
   }
 
 
   const dispatch = useDispatch()
   const onGoogleSignIn = () => {
     dispatch(startGoogleSignIn())
+  }
+
+  const onFacebookSignIn = () => {
+    dispatch(startFacebookSignIn())
   }
 
   const onStartLoginWithEmailPassword = () => {
@@ -101,10 +104,18 @@ export const LoginPages = () => {
               </Button>
             </Grid>
 
-            <Grid item xs={12}>
-              <Button variant="contained" fullWidth onClick={onGoogleSignIn} sx={{backgroundColor: primary}}>
+            <Grid item xs={12} sx={{display: "flex", justifyContent: "space-between"}}>
+              <Button variant="contained" onClick={onGoogleSignIn} sx={{backgroundColor: primary}}>
                 <Google />
                 <Typography sx={{ ml: 1 }}>Google</Typography>
+              </Button>
+              <Button variant="contained" onClick={onFacebookSignIn} sx={{backgroundColor: primary}}>
+                <Facebook />
+                <Typography sx={{ ml: 1 }}>Facebook</Typography>
+              </Button>
+              <Button variant="contained" sx={{backgroundColor: primary}}>
+                <Apple />
+                <Typography sx={{ ml: 1 }}>Apple</Typography>
               </Button>
             </Grid>
           </Grid>

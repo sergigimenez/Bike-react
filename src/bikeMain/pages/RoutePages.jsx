@@ -29,16 +29,15 @@ export const RoutePages = () => {
     }
   }, [routes.totalResults])
   
-
   const CardMemorized = useMemo(() => {
-    if (typeof routes.cards[0] != "undefined") {
-      return routes.cards.map(route => (
-        <Card key={route.id + (Math.random() + 1).toString(36).substring(7)} route={route} theme={theme}></Card>
-      ))
-    } else {
-      return <></>
-    }
-  }, [routes])
+      if (typeof routes.cards[0] != "undefined") {
+        return routes.cards.map(route => (
+          <Card key={route.id + (Math.random() + 1).toString(36).substring(7)} route={route} theme={theme}></Card>
+        ))
+      } else {
+        return <></>
+      }
+  }, [routes.cards])
 
   const handleChangeNumPage = function(event, value){
     setNumPage(value)
@@ -54,6 +53,8 @@ export const RoutePages = () => {
         {
           <div>{CardMemorized}</div>
         }
+
+        
 
         <Stack spacing={2}>
           <Pagination count={pages} showFirstButton showLastButton page={numPage} onChange={handleChangeNumPage} />
