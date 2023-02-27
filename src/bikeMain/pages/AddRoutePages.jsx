@@ -1,11 +1,11 @@
-import {Button} from '@mui/material'
-import {useEffect, useState} from 'react'
-import {Menu} from '../components/AddRoute/Menu/Menu'
-import {Configuracion, DragAndDrop, Preview, Rss} from '../components/AddRoute'
-import {BikeLayout} from '../layout/BikeLayout'
-import {useForm} from '../../hooks/useForm'
-import {useDispatch, useSelector} from 'react-redux'
-import {setCardAPI} from '../../store/Card/thunks.js'
+import { Button } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { Menu } from '../components/AddRoute/Menu/Menu'
+import { Configuracion, DragAndDrop, Preview, Rss } from '../components/AddRoute'
+import { BikeLayout } from '../layout/BikeLayout'
+import { useForm } from '../../hooks/useForm'
+import { useDispatch, useSelector } from 'react-redux'
+import { setCardAPI } from '../../store/Card/thunks.js'
 
 const formData = {
     titulo: '',
@@ -35,7 +35,7 @@ const formValidations = {
 export const AddRoutePages = () => {
 
     const theme = useSelector(state => state.theme)
-    const {primary, secondary} = theme
+    const { primary, secondary } = theme
 
     const [activeStep, setActiveStep] = useState(0)
     const dispatch = useDispatch()
@@ -65,10 +65,10 @@ export const AddRoutePages = () => {
 
     const [isSubmit, setIsSubmit] = useState(
         {
-            step_0: {status: false, validations: validations[0], sumbit: false},
-            step_1: {status: false, validations: validations[1], sumbit: false},
-            step_2: {status: false, validations: [], sumbit: false},
-            step_3: {status: false, validations: [], sumbit: false}
+            step_0: { status: false, validations: validations[0], sumbit: false },
+            step_1: { status: false, validations: validations[1], sumbit: false },
+            step_2: { status: false, validations: [], sumbit: false },
+            step_3: { status: false, validations: [], sumbit: false }
         })
 
     useEffect(() => {
@@ -85,42 +85,42 @@ export const AddRoutePages = () => {
     /*set route */
     const [route, setRoute] = useState('')
 
-    const {titulo, distancia, desnivel, fecha, precio, linkWeb, instagram, facebook, twitter, img} = formState
+    const { titulo, distancia, desnivel, fecha, precio, linkWeb, instagram, facebook, twitter, img } = formState
 
     useEffect(() => {
         (statusForm) &&
-        setRoute({
-            img: img,
-            titleCard: titulo,
-            info: {
-                Distancia: distancia,
-                Desnivel: desnivel,
-                Fecha: fecha,
-                Precio: precio
-            },
-            stateComents: {
-                likes: 2,
-                comentarios: 0
-            },
-            comments: []
-        })
+            setRoute({
+                img: img,
+                titleCard: titulo,
+                info: {
+                    Distancia: distancia,
+                    Desnivel: desnivel,
+                    Fecha: fecha,
+                    Precio: precio
+                },
+                stateComents: {
+                    likes: 2,
+                    comentarios: 0
+                },
+                comments: []
+            })
     }, [statusForm, formState])
     /*set route */
 
     const icons = [
         {
             text: "Configuracion",
-            tabComponent: <Configuracion formData={formData} onInputChange={onInputChange} isSubmit={isSubmit.step_0}/>
+            tabComponent: <Configuracion formData={formData} onInputChange={onInputChange} isSubmit={isSubmit.step_0} />
         },
         {
             text: "Redes Sociales",
-            tabComponent: <Rss formData={formData} onInputChange={onInputChange} isSubmit={isSubmit.step_1}/>
+            tabComponent: <Rss formData={formData} onInputChange={onInputChange} isSubmit={isSubmit.step_1} />
         },
         {
             text: "Imagen",
-            tabComponent: <DragAndDrop secondary={secondary} formState={formState} onInputChange={onInputChange}/>
+            tabComponent: <DragAndDrop secondary={secondary} formState={formState} onInputChange={onInputChange} />
         },
-        {text: "Preview", tabComponent: <Preview theme={theme} route={route}/>}
+        { text: "Preview", tabComponent: <Preview theme={theme} route={route} /> }
     ]
 
     const handleStep = (step) => {
@@ -151,7 +151,7 @@ export const AddRoutePages = () => {
                         status = false
                     }
                 }
-                setIsSubmit({...isSubmit, [key]: {status, validations: validations[activeStep], sumbit: true}})
+                setIsSubmit({ ...isSubmit, [key]: { status, validations: validations[activeStep], sumbit: true } })
                 //status = true
                 return status
             }
@@ -160,18 +160,19 @@ export const AddRoutePages = () => {
 
     return (
         <>
+            <title>Añadir Carreras BTT</title>
             <BikeLayout title='AddRoute'>
 
-                <div className='card' style={{padding: 10}}>
+                <div className='card' style={{ padding: 10 }}>
                     <div className='container'>
                         <div className='row'>
-                            <div className='col-12' style={{marginTop: 10}}>
+                            <div className='col-12' style={{ marginTop: 10 }}>
                                 <Menu handleStep={handleStep} activeStep={activeStep} icons={icons}></Menu>
                             </div>
-                            <div className='col-12' style={{marginTop: 10, minHeight: 600}}>
-                                <form onSubmit={onSubmit} style={{height: "90%"}}>
+                            <div className='col-12' style={{ marginTop: 10, minHeight: 600 }}>
+                                <form onSubmit={onSubmit} style={{ height: "90%" }}>
                                     {icons.map((icon, index) => (
-                                        <div key={index} style={{height: "100%"}} hidden={activeStep !== index}>
+                                        <div key={index} style={{ height: "100%" }} hidden={activeStep !== index}>
                                             <>
                                                 {icon.tabComponent}
                                             </>
@@ -182,20 +183,20 @@ export const AddRoutePages = () => {
                                     <Button
                                         hidden={!(activeStep <= icons.length && activeStep != 0)}
                                         variant="contained"
-                                        sx={{backgroundColor: primary, '&:hover': {backgroundColor: primary}}}
+                                        sx={{ backgroundColor: primary, '&:hover': { backgroundColor: primary } }}
                                         onClick={handlePreviuosStep}
                                     >Anterior</Button>
                                     <Button
                                         hidden={!(activeStep >= 0 && (activeStep < icons.length - 1))}
                                         variant="contained"
-                                        sx={{backgroundColor: primary, '&:hover': {backgroundColor: primary}}}
+                                        sx={{ backgroundColor: primary, '&:hover': { backgroundColor: primary } }}
                                         onClick={handleNextStep}
                                     >Siguiente</Button>
                                     <Button
                                         hidden={!(activeStep >= 0 && (activeStep == icons.length - 1))}
                                         variant="contained"
                                         disabled={!statusForm}
-                                        sx={{backgroundColor: primary, '&:hover': {backgroundColor: primary}}}
+                                        sx={{ backgroundColor: primary, '&:hover': { backgroundColor: primary } }}
                                         onClick={handleAddRoute}
                                     >Add</Button>
                                 </div>

@@ -12,7 +12,7 @@ const styles = {
     desktop: {
         card: {
             height: 300,
-            maxWidth: 795
+            maxWidth: 752
         },
         cardContainer_1: {
             height: "100%",
@@ -40,14 +40,19 @@ const styles = {
 }
 export const Card = ({ theme, route, cardStyleMobile }) => {
     const { primary, title, secondary, background } = theme
-    const { img, titleCard, info, stateComents, comments, id } = route
+    const { img, titleCard, info, stateComents, id } = route
 
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth)
+    const {cardsState} = useSelector(state => state.card) 
+
+    const {comments} = cardsState.find(cs => {
+        return cs.idCard == id
+    }) 
 
     var isVisible = 'hidden'
     if (comments.length >= 1) {
-        var { id:idComentario, userComent, dateComent, textComent } = comments[0]
+        var { id:idComentario, userComent, dateComent, textComent } = comments[Math.floor(Math.random() * comments.length)]
         isVisible = 'visible'
     }
 
@@ -60,6 +65,12 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
     const [open, setOpen] = useState(false)
     const handleOpen = () => {setOpen(true)}
     const handleClose = () => {setOpen(false)}
+    const [typeModal, setTypeModal] = useState()
+
+    const onHandleOpen = (type) => {
+        setTypeModal(type)
+        handleOpen()
+    }
 
     const onFormatData = (keyElement, valueInfo) => {
         if (keyElement == "Distancia") {
@@ -113,7 +124,6 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
     }
 
     const onUploadImage = (files) => {
-        console.log(files.target.files[0])
         dispatch(uploadImage(files.target.files[0], titleCard, id))
     }
 
@@ -122,7 +132,7 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
         <>
             <div className={`card cardMediaQuery row d-flex flex-row align-items-center ${classNameMobile}`} style={{ height: card.height, margin: 5, border: "0.1px solid black", borderRadius: 10, maxWidth: card.maxWidth, minWidth: 325 }}>
                 <div className='col-sm-12 col-md-4 d-flex flex-column justify-content-center' style={{ height: cardContainer_1.height, minWidth: cardContainer_1.minWidth, maxWidth: cardContainer_1.maxWidth }}>
-                    <img src={img} style={{ height: "65%", width: "100%", objectFit: "contain", backgroundColor: secondary }}></img>
+                    <img src={img} style={{ height: "65%", width: "100%", objectFit: "contain", backgroundColor: "rgba(236, 236, 228, 0.30)" }}></img>
                     {
                         (img.toString() == "vacio") &&
                         <input type="file" onChange={(files) => { onUploadImage(files) }} accept="image/*"></input>
@@ -131,8 +141,8 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
                         {
                             (cardStyleMobile || !mediaQuery) &&
                             <div className='col-md-5 d-flex justify-content-center'>
-                                <Button variant='outlined' sx={{ color: "black", mr: 0.5 }}><ThumbUp /></Button>
-                                <Button variant="filled" sx={{ color: "black", ml: 0.5 }}><Comment /></Button>
+                                <Button onClick={(event) => onLike(id, event)} variant='outlined' sx={{ color: "black", mr: 0.5, backgroundColor: cardLiked }}><ThumbUp /></Button>
+                                <Button variant="outlined" sx={{ color: "black", ml: 0.5 }} onClick={() => {onHandleOpen("addComment")}}><Comment /></Button>
                             </div>
                         }
                         <ButtonGroup variant='text' size='small'>
@@ -154,10 +164,10 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
                         </ButtonGroup>
                     </div>
                 </div>
-                {(cardStyleMobile || !mediaQuery) && <CardAvatarGroup stateComents={stateComents} mediaQuery={mediaQuery} cardStyleMobile={cardStyleMobile} id={id} onLike={onLike} cardLiked={cardLiked}></CardAvatarGroup>}
+                {(cardStyleMobile || !mediaQuery) && <CardAvatarGroup stateComents={stateComents} mediaQuery={mediaQuery} cardStyleMobile={cardStyleMobile} id={id} onLike={onLike} cardLiked={cardLiked} theme={theme}></CardAvatarGroup>}
                 <div className='col-sm-12 col-md-8 d-flex flex-column justify-content-evenly' style={{ height: cardContainer_2.height }}>
                     <FollowModule primary={primary} secondary={secondary} titleCard={titleCard} id={id}></FollowModule>
-                    <ul className="list-group list-group-horizontal lastElememtNoneBorderRight" style={{ marginBottom: "5px", maxWidth: "500px" }}>
+                    <ul className="list-group list-group-horizontal lastElememtNoneBorderRight" style={{ marginBottom: "5px", maxWidth: "500px", flexWrap: "wrap"}}>
                         {
                             Object.keys(info).map(keyElement => {
                                 if (
@@ -180,15 +190,15 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
                             })
                         }
                     </ul>
-                    {(mediaQuery && !cardStyleMobile) && <CardAvatarGroup stateComents={stateComents} mediaQuery={mediaQuery} isVisible={isVisible} id={id} onLike={onLike} cardLiked={cardLiked}></CardAvatarGroup>}
+                    {(mediaQuery && !cardStyleMobile) && <CardAvatarGroup stateComents={stateComents} mediaQuery={mediaQuery} isVisible={isVisible} id={id} onLike={onLike} cardLiked={cardLiked} theme={theme}></CardAvatarGroup>}
                     <div className='container'>
                         <div className='row d-flex justify-content-between'>
-                            <div className='col-sm-6 col-md-5 d-flex'>
+                            <div className='col-6 col-sm-6 col-md-5 d-flex'>
                                 <Avatar sx={{ width: 25, height: 25, mr: 0.5, visibility: isVisible }} />
                                 <Typography variant='subtitle2'>{(typeof userComent == 'undefined' ? '' : userComent)}</Typography>
                             </div>
-                            <div className='col-sm-6 offset-md-4 col-md-3 d-flex justify-content-end'>
-                                <Typography variant='caption'>{(typeof dateComent == 'undefined' ? '' : dateComent)}</Typography>
+                            <div className='col-6 col-sm-6 offset-md-4 col-md-3 d-flex justify-content-end'>
+                                <Typography variant='caption'>{(typeof dateComent == 'undefined' ? '' : new Date(dateComent).toLocaleDateString())}</Typography>
                             </div>
                             <div className='d-flex justify-content-between align-items-center'>
                                 <Typography variant='body2'>{(typeof textComent == 'undefined' ? '' : textComent)} </Typography>
@@ -198,8 +208,8 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
                     </div>
                     <Typography variant="caption" sx={{ visibility: 'visible' }}>
                         <ArrowDropDown />
-                        <Link onClick={handleOpen} >Ver mas comentarios</Link>
-                        <ModalComentarios onHandleClose={handleClose} state={open} primary={primary} background={background}></ModalComentarios>
+                        <Link onClick={() => {onHandleOpen("viewComment")}} >Ver mas comentarios</Link>
+                        <ModalComentarios onHandleClose={handleClose} state={open} theme={theme} mediaQuery={mediaQuery} idCard={id} typeModal={typeModal}></ModalComentarios>
                     </Typography>
                 </div>
             </div>

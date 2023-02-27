@@ -4,6 +4,7 @@ export const cardSlice = createSlice({
     name: 'card',
     initialState: {
         cards: [],
+        cardsState: [],
         provincias: [],
         poblaciones: [],
         titleCard: [],
@@ -16,6 +17,34 @@ export const cardSlice = createSlice({
             state.cards = []
         },
         setCard: (state, action) => {
+            state.cards = action.payload.map(card => {
+                state.cardsState.push({
+                    "idCard": card.id,
+                    "likes": card.stateComents.likes,
+                    "comentarios": card.stateComents.comentarios,
+                    "comments": card.comments
+                })
+
+                return {
+                    "img": card.img,
+                    "titleCard": card.titleCard,
+                    "info": {
+                        "Distancia": card.info.Distancia,
+                        "Desnivel": card.info.Desnivel,
+                        "Fecha_confirmada": card.info.Fecha_confirmada,
+                        "Poblacion": card.info.Poblacion,
+                        "Provincia": card.info.Provincia,
+                        "Precio": card.info.Precio,
+                        "Facebook": card.info.Facebook,
+                        "Web": card.info.Web,
+                        "Instagram": card.info.Instagram,
+                        "Twitter": card.info.Twitter,
+                        "Youtube": card.info.Youtube,
+                    },
+                    "id": card.id
+                }
+            })
+
             state.cards = action.payload
         },
         setProvincias: (state, action) => {
@@ -34,17 +63,35 @@ export const cardSlice = createSlice({
             state.totalResults = action.payload
         },
         updateLikesOneCard: (state, action) => {
-            state.cards.map(c => {
-                if (c.id == action.payload.idCard) {
-                    return c.stateComents.likes = action.payload.totalLikes
+            state.cardsState.map(statusLikes => {
+                if (statusLikes.idCard == action.payload.idCard) {
+                    return statusLikes.likes = action.payload.totalLikes
                 }
             })
         },
         updateImage: (state, action) => {
             console.log(action)
-            state.cards.map(c => {
-                if (c.id == action.payload.cardId) {
+            state.cardsState.map(c => {
+                if (c.idCard == action.payload.cardId) {
                     return c.img = action.payload.cardImg
+                }
+            })
+        },
+        addCommentSlice: (state, action) => {
+            state.cardsState.map(card => {
+                if (card.idCard == action.payload.idCard) {
+                    card.comentarios = action.payload.totalComentario
+                    card.comments.push(action.payload.comentario)
+                }
+            })
+        },
+        deleteCommentSlice: (state, action) => {
+            state.cardsState.map(card => {
+                if (card.idCard == action.payload.idCard) {
+                    card.comentarios = action.payload.totalComentario
+                    card.comments = card.comments.filter(comment => {
+                        return comment.id != action.payload.deleteCommentId
+                    })
                 }
             })
         }
@@ -54,4 +101,4 @@ export const cardSlice = createSlice({
 
 export const { clearCards, setCard, setProvincias, setPoblaciones, setTitleCard,
     setStatusSearch, setStatusUpdate, setTotalResults, updateLikesOneCard,
-    updateImage } = cardSlice.actions;
+    updateImage, addCommentSlice, deleteCommentSlice } = cardSlice.actions;

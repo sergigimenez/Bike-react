@@ -1,4 +1,4 @@
-import { clearCards, setCard, setProvincias, setPoblaciones, setTitleCard, setStatusSearch, setTotalResults, updateLikesOneCard, updateImage } from "./cardSlice"
+import { clearCards, setCard, setProvincias, setPoblaciones, setTitleCard, setStatusSearch, setTotalResults, updateLikesOneCard, updateImage, addCommentSlice, deleteCommentSlice } from "./cardSlice"
 import { onFollowCards, onLikeCards } from "../auth/authSlice"
 import { bikeMernApi } from "../../api/index.js";
 import { async } from "@firebase/util";
@@ -66,7 +66,7 @@ export const getTitleCardThunks = () => {
 /*Obetener todos los titulos de las carreras*/
 
 /*Añadir nueva ruta a la BD */
-export const searchCard = (numPage, fieldProvincias, fieldPoblaciones, fieldTitleCarreras, fieldDistancia, fieldDesnivel) => {
+export const searchCard = (numPage, fieldProvincias, fieldPoblaciones, fieldTitleCarreras, fieldDistancia, fieldDesnivel, fieldDate) => {
     return async (dispatch) => {
         try {
             let query = {
@@ -82,7 +82,7 @@ export const searchCard = (numPage, fieldProvincias, fieldPoblaciones, fieldTitl
                         "gte": fieldDesnivel[0],
                         "lte": fieldDesnivel[1]
                     },
-                    "fecha": null
+                    "fecha": fieldDate != null ? new Date(fieldDate).toLocaleDateString("en-US").toString() : null
                 }
             }
 
@@ -90,7 +90,7 @@ export const searchCard = (numPage, fieldProvincias, fieldPoblaciones, fieldTitl
 
             dispatch(clearCards())
             dispatch(setStatusSearch())
-            dispatch(setTotalResults(Math.ceil(data.totalResults / 25)))
+            dispatch(setTotalResults(Math.ceil(data.totalResults)))
 
             dispatch(setCard(data.resp))
         } catch (e) {
@@ -124,10 +124,10 @@ export const uploadImage = (file, titulo, idCard) => {
 
         await resp.then(resp => {
             respParsed = resp
-          })
-        
-        const { data } = await bikeMernApi.post('/cards/uploadImage', {cardId: idCard, newImage: respParsed})
-        
+        })
+
+        const { data } = await bikeMernApi.post('/cards/uploadImage', { cardId: idCard, newImage: respParsed })
+
         dispatch(updateImage(data))
 
         return resp
@@ -171,7 +171,7 @@ export const followCardByUser = (idCard) => {
                     "cards": [idCard]
                 })
 
-            const { data } = await bikeMernApi.get('/cards/user')
+            const { data } = await bikeMernApi.post('/cards/user', { "uid": getState().auth.uid })
 
             dispatch(onFollowCards(data.usuarioCards))
         } catch (e) {
@@ -189,7 +189,7 @@ export const unfollowCardByUser = (idCard) => {
                     "cards": [idCard]
                 })
 
-            const { data } = await bikeMernApi.get('/cards/user')
+            const { data } = await bikeMernApi.post('/cards/user', { "uid": getState().auth.uid })
 
             dispatch(onFollowCards(data.usuarioCards))
         } catch (e) {
@@ -211,9 +211,9 @@ export const likeRouteByUser = (idCard) => {
                     "cardId": idCard
                 })
 
-            //dispatch(updateLikesOneCard({ idCard, totalLikes: resp.data.totalLikes }))
+            dispatch(updateLikesOneCard({ idCard, totalLikes: resp.data.totalLikes }))
 
-            const { data } = await bikeMernApi.get('/cards/user')
+            const { data } = await bikeMernApi.post('/cards/user', { "uid": getState().auth.uid })
             dispatch(onLikeCards(data.cardsLiked))
 
         } catch (e) {
@@ -223,3 +223,57 @@ export const likeRouteByUser = (idCard) => {
 }
 
 /*Like Route */
+
+/*Añadir, editar y eliminar comentarios */
+
+export const addComment = ({ fieldComent }, idCard) => {
+    return async (dispatch, getState) => {
+        try {
+            const { uid, displayName } = getState().auth
+
+            const resp = await bikeMernApi.post('/cards/comment',
+                {
+                    "uid": uid,
+                    "cardId": idCard,
+                    "comment": {
+                        "userComent": displayName,
+                        "textComent": fieldComent,
+                        "dateComent": new Date()
+                    }
+                })
+
+            dispatch(addCommentSlice({ "comentario": resp.data.comentario, "idCard": idCard, "totalComentario": resp.data.totalComentario }))
+
+        } catch (e) {
+            console.log(e.response.data.error) //TODO GESTIONAR ERRORES AL UNFOLLOW CARDS
+        }
+    }
+}
+
+export const deleteComment = (deleteCommentId, idCard) => {
+    return async (dispatch, getState) => {
+        try {
+            const { uid } = getState().auth
+            const resp = await bikeMernApi.delete('/cards/comment',
+                {
+                    data: {
+                        "uid": uid,
+                        "comment": {
+                            "id": deleteCommentId
+                        }
+                    }
+                }
+            )
+
+            console.log({ "uid": uid, "deleteCommentId": deleteCommentId, "idCard": idCard, "totalComentario": resp.data.totalComentario })
+
+            !!resp.data &&
+                dispatch(deleteCommentSlice({ "uid": uid, "deleteCommentId": deleteCommentId, "idCard": idCard, "totalComentario": resp.data.totalComentario }))
+
+        } catch (e) {
+            console.log(e.response.data.error) //TODO GESTIONAR ERRORES AL UNFOLLOW CARDS
+        }
+    }
+}
+
+/*Añadir, editar y eliminar comentarios */

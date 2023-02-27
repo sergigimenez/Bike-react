@@ -12,12 +12,12 @@ export const FollowModule = ({primary,secondary, titleCard, id}) => {
     const dispatch = useDispatch()
 
     function isStatusCard(idCard){
-       return !!user.cards.find(cardUser => {return cardUser == idCard}) ? 'follow' : 'unfollow'
+       return !!user.cards.find(cardUser => {return cardUser.id == idCard}) ? 'follow' : 'unfollow'
     }
 
     function onHandleMouseEnter(idCard, event){
         setAnchorElement(anchorElement ? null : event.currentTarget)
-        if(typeof user.cards.find(cardUser => {return cardUser == idCard}) != 'undefined'){
+        if(typeof user.cards.find(cardUser => {return cardUser.id == idCard}) != 'undefined'){
             setStatusCard("unfollow")
         }else{
             setStatusCard("follow")
@@ -29,7 +29,7 @@ export const FollowModule = ({primary,secondary, titleCard, id}) => {
     }
 
     function onHandleClickFollow(idCard, event){
-        if(typeof user.cards.find(cardUser => {return cardUser == idCard}) != 'undefined'){
+        if(typeof user.cards.find(cardUser => {return cardUser.id == idCard}) != 'undefined'){
             dispatch(unfollowCardByUser(idCard));
         }else{
             dispatch(followCardByUser(idCard));

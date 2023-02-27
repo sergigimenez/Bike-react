@@ -32,15 +32,12 @@ export const signInWithFacebook = async () => {
         var resp = null
 
         FB.getLoginStatus(function (response) {
-            console.log(response)
             if (response.status == "unknown") {
                 FB.login()
             }
-            console.log( response)
-            console.log(FB)
+            resp = response
         });
         
-
         return resp
     } catch (e) {
         return e

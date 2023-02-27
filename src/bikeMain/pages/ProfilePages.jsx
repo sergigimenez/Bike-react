@@ -27,6 +27,7 @@ export const ProfilePages = () => {
 
   return (
     <>
+    <title>Perfil Usuario</title>
       <BikeLayout title={'profile'} noPadding={true}>
         <ProfileLayout>
           <div className={`${classStyle}`}>

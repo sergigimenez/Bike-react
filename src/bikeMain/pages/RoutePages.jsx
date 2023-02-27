@@ -6,6 +6,7 @@ import { handleSetRoutes } from '../../store/Card/thunks'
 import { Card } from '../components/Card/Card'
 import { Searcher } from '../components/Searcher/Searcher'
 import { BikeLayout } from '../layout/BikeLayout'
+import { BikeMainPages } from './BikeMainPages'
 
 export const RoutePages = () => {
   const [numPage, setNumPage] = useState(1)
@@ -17,44 +18,40 @@ export const RoutePages = () => {
   const [pages, setPages] = useState(45)
 
   useEffect(() => {
-    if(routes.statusSearch == "not-searched"){
+    if (routes.statusSearch == "not-searched") {
       dispatch(handleSetRoutes(numPage))
     }
   }, [numPage])
 
   useEffect(() => {
-    if(routes.statusSearch == "searched"){
+    if (routes.statusSearch == "searched") {
       setPages(routes.totalResults)
       setNumPage(1)
     }
   }, [routes.totalResults])
-  
+
   const CardMemorized = useMemo(() => {
-      if (typeof routes.cards[0] != "undefined") {
-        return routes.cards.map(route => (
-          <Card key={route.id + (Math.random() + 1).toString(36).substring(7)} route={route} theme={theme}></Card>
-        ))
-      } else {
-        return <></>
-      }
+    if (typeof routes.cards[0] != "undefined") {
+      return routes.cards.map(route => (
+        <Card key={route.id + (Math.random() + 1).toString(36).substring(7)} route={route} theme={theme}></Card>
+      ))
+    } else {
+      return <></>
+    }
   }, [routes.cards])
 
-  const handleChangeNumPage = function(event, value){
+  const handleChangeNumPage = function (event, value) {
     setNumPage(value)
   }
 
 
   return (
     <>
+      <title>Carreras (BTT / MTB)</title>
       <BikeLayout title={'route'}>
 
-        <Searcher numPage={numPage} routes={routes}/>
-
-        {
-          <div>{CardMemorized}</div>
-        }
-
-        
+        <Searcher numPage={numPage} routes={routes} />
+          {<div>{CardMemorized}</div>}
 
         <Stack spacing={2}>
           <Pagination count={pages} showFirstButton showLastButton page={numPage} onChange={handleChangeNumPage} />

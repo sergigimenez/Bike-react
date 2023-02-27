@@ -28,15 +28,13 @@ export const startFacebookSignIn = () => {
 
         const result = await signInWithFacebook();
 
-        console.log(result)
+        if (result.status != "connected") return dispatch(startLogout("No estas logeado en facebook"))
 
-        //if (result.status != "connected") return dispatch(startLogout("No estas logeado en facebook"))
-
-        //const { data } = await bikeMernApi.post('/auth/facebook', {"uid": result.authResponse.userID, "name": "usuario de test"})
-        //localStorage.setItem('token', data.token)
-        //localStorage.setItem('token-init-date', new Date().getTime())
+        const { data } = await bikeMernApi.post('/auth/facebook', {"uid": result.authResponse.userID, "name": "usuario de test"})
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('token-init-date', new Date().getTime())
         
-        //return dispatch(onLogin({ name: data.name, uid: data.uid, email: data.email, cards: data.cards, cardsLiked: data.cardsLiked }))
+        return dispatch(onLogin({ name: data.name, uid: data.uid, email: data.email, cards: data.cards, cardsLiked: data.cardsLiked }))
     }
 }
 
