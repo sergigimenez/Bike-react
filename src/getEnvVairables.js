@@ -1,11 +1,9 @@
-
-
 export const getEnvVariables = () => {
-    //import.meta.env
+  //import.meta.env
 
-    return {
-        //...import.meta.env
-        VITE_API_URL: import.meta.env.VITE_API_URL,
-        VITE_API_URL_PROD: import.meta.env.VITE_API_URL_PROD
-    }
-}
+  return {
+    //...import.meta.env
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_API_URL_PROD: process.env.NEXT_PUBLIC_API_URL_PROD,
+  };
+};

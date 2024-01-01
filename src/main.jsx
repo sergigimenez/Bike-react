@@ -10,7 +10,7 @@ import './style.css'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-
+  
   <Provider store={store}>
     <ConfigProvider locale={esES}>
       {/*<BrowserRouter>*/}

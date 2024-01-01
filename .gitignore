@@ -109,3 +109,7 @@ yarn.lock
 # dotenv environment variables file
 #.env
 #.env.test
+
+#NEXTJS
+.next
+next-env.d.ts

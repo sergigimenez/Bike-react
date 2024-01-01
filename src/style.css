@@ -172,4 +172,12 @@
 .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track{
     background-color: #1C6758 !important
 }
+
+.MuiTypography-root.MuiTypography-body1.MuiFormControlLabel-label.css-ahj2mt-MuiTypography-root{
+    font-size: 13px;
+}
+
+.MuiButton-endIcon.MuiButton-iconSizeMedium.css-9tj150-MuiButton-endIcon:has(.buttonSearch){
+     margin: 0;
+}
 /*Switch COLOR*/

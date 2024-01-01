@@ -75,12 +75,12 @@ export const searchCard = (numPage, fieldProvincias, fieldPoblaciones, fieldTitl
                     "poblacion": fieldPoblaciones.length != 0 ? fieldPoblaciones.map(pob => pob.poblacion) : [],
                     "titleCard": fieldTitleCarreras != null ? fieldTitleCarreras.titleCard : null,
                     "distancia": {
-                        "gte": fieldDistancia[0],
-                        "lte": fieldDistancia[1]
+                        "gte": fieldDistancia[0] == 0 ? null : fieldDistancia[0],
+                        "lte": fieldDistancia[1] == 150 ? null: fieldDistancia[1]
                     },
                     "desnivel": {
-                        "gte": fieldDesnivel[0],
-                        "lte": fieldDesnivel[1]
+                        "gte": fieldDesnivel[0] == 0 ? null: fieldDesnivel[0],
+                        "lte": fieldDesnivel[1] == 3000 ? null: fieldDesnivel[1]
                     },
                     "fecha": fieldDate != null ? new Date(fieldDate).toLocaleDateString("en-US").toString() : null
                 }

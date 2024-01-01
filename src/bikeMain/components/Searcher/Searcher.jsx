@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Autocomplete, Button, Chip, Slider, Switch, TextField, useMediaQuery } from '@mui/material'
+import { Autocomplete, Button, Chip, FormControlLabel, Slider, Switch, TextField, useMediaQuery } from '@mui/material'
 import { Stack } from '@mui/system'
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { useEffect, useState } from 'react'
@@ -14,7 +14,7 @@ import { Search } from '@mui/icons-material';
 export const Searcher = ({ numPage, routes }) => {
     dayjs.locale('es')
     const mediaQuery = useMediaQuery('(min-width:785px)');
-    const {primary} = useSelector(state => state.theme)
+    const { primary } = useSelector(state => state.theme)
 
     const [fieldDate, setDate] = useState(null)
 
@@ -59,6 +59,71 @@ export const Searcher = ({ numPage, routes }) => {
     return (
         <>
             <div className='row' style={{ marginTop: 10 }}>
+            <div className='row'>
+                <div className='col-12 d-flex justify-content-center' style={{ overflow: "hidden" }}>
+                    <div className='col-8 d-flex align-items-center flex-flow-column' style={{ flexFlow: "column" }}>
+                        <Slider
+                            value={fieldDistancia}
+                            onChange={handleSliderDistanciaHook}
+                            valueLabelDisplay="auto"
+                            disableSwap
+                            step={5}
+                            min={0}
+                            max={150}
+                            sx={{ width: mediaQuery ? "500px" : "210px", ml: 2, mr: 2 }}
+                        />
+                        <div style={{ display: "flex", justifyContent: "space-between", width: "100%", marginTop: -15 }}>
+                            <Typography style={{ display: "flex", alignItems: "center" }}>
+                                {
+                                    fieldDistancia[0] != null ? fieldDistancia[0] + " km" : "0 km"
+                                }
+                            </Typography>
+                            <Typography style={{ display: "flex", alignItems: "center" }}>
+                                {
+                                    fieldDistancia[1] != null ? fieldDistancia[1] + " km" : "150 km"
+                                }
+                            </Typography>
+                        </div>
+                    </div>
+                    <div className='col-4 d-flex align-items-center' style={{paddingLeft: 13}}>
+                        <FormControlLabel control={<Switch defaultChecked size="small" />} style={{ fontSize: "13px !important", margin: 0 }} label="Fecha Confirmada" />
+                    </div>
+                </div>
+                <div className='col-12 d-flex justify-content-center' style={{ overflow: "hidden" }}>
+                    <div className='col-8 d-flex align-items-center flex-flow-column' style={{ flexFlow: "column" }}>
+                        <Slider
+                            value={fieldDesnivel}
+                            onChange={handleSliderDesnivelHook}
+                            valueLabelDisplay="auto"
+                            disableSwap
+                            step={5}
+                            min={0}
+                            max={3000}
+                            sx={{ width: mediaQuery ? "500px" : "210px", ml: 2, mr: 2 }}
+                        />
+                        <div style={{ display: "flex", justifyContent: "space-between", width: "100%", marginTop: -15 }}>
+                            <Typography style={{ display: "flex", alignItems: "center" }}>
+                                {
+                                    fieldDesnivel[0] != null ? fieldDesnivel[0] + " m +" : "0 m +"
+                                }
+                            </Typography>
+                            <Typography style={{ display: "flex", alignItems: "center" }}>
+                                {
+                                    fieldDesnivel[1] != null ? fieldDesnivel[1] + " m +" : "3000 m +"
+                                }
+                            </Typography>
+                        </div>
+                    </div>
+                    <div className='col-4 d-flex align-items-center justify-content-center'>
+                        <Button
+                            size="medium" variant='contained' style={{ backgroundColor: primary }}
+                            endIcon={<Search className='buttonSearch' />}
+                            onClick={onHandleSerchRaces}>
+                        </Button>
+                    </div>
+
+                </div>
+            </div>
                 <div className='col-12 d-flex justify-content-center'>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DesktopDatePicker
@@ -70,6 +135,27 @@ export const Searcher = ({ numPage, routes }) => {
                             renderInput={(params) => <TextField {...params} />}
                         />
                     </LocalizationProvider>
+                </div>
+                <div className='col-12'>
+                    <Autocomplete
+                        id="multiple-limit-tags_2"
+                        freeSolo
+                        options={titleCard}
+                        getOptionLabel={(option) => option.titleCard}
+                        onChange={(e, value) => setFieldTitleCarrerasHook(value)}
+                        onFocus={(e) => onFocusGetTitleCarreras()}
+                        renderTags={(value, getTagProps) =>
+                            value.map((option, index) => {
+                                return (
+                                    <Chip variant="outlined" label={option.titleCard} {...getTagProps({ index })} />
+                                )
+                            })
+                        }
+                        renderInput={(params) => (
+                            <TextField {...params} variant="filled" label="Nombre de la carrera" />
+                        )}
+                        sx={{ width: '100%' }}
+                    />
                 </div>
                 <div className='col-12 d-flex justify-content-center'>
                     <Autocomplete
@@ -89,9 +175,9 @@ export const Searcher = ({ numPage, routes }) => {
                             })
                         }
                         renderInput={(params) => (
-                            <TextField {...params} variant="filled" label="Provincias" placeholder="Favorites" />
+                            <TextField {...params} variant="filled" label="Provincias" />
                         )}
-                        sx={{ width: '50%' }}
+                        sx={{ width: '50%', height: 95 }}
                     />
 
                     <Autocomplete
@@ -111,94 +197,10 @@ export const Searcher = ({ numPage, routes }) => {
                             })
                         }
                         renderInput={(params) => (
-                            <TextField {...params} variant="filled" label="Poblaciones" placeholder="Favorites" />
+                            <TextField {...params} variant="filled" label="Poblaciones" />
                         )}
-                        sx={{ width: '50%' }}
+                        sx={{ width: '50%', height: 95 }}
                     />
-                </div>
-            </div>
-            <div className='row'>
-                <div className='col-12'>
-                    <Autocomplete
-                        id="multiple-limit-tags_2"
-                        freeSolo
-                        options={titleCard}
-                        getOptionLabel={(option) => option.titleCard}
-                        onChange={(e, value) => setFieldTitleCarrerasHook(value)}
-                        onFocus={(e) => onFocusGetTitleCarreras()}
-                        renderTags={(value, getTagProps) =>
-                            value.map((option, index) => {
-                                return (
-                                    <Chip variant="outlined" label={option.titleCard} {...getTagProps({ index })} />
-                                )
-                            })
-                        }
-                        renderInput={(params) => (
-                            <TextField {...params} variant="filled" label="Nombre de la carrera" placeholder="Favorites" />
-                        )}
-                        sx={{ width: '100%' }}
-                    />
-                </div>
-                <div className='col-12 d-flex justify-content-center' style={{ overflow: "hidden" }}>
-                    <div className='col-8 d-flex align-items-center'>
-                        <Typography style={{ display: "flex", alignItems: "center" }}>
-                            {
-                                fieldDistancia[0] != null ? fieldDistancia[0] + " km" : "0 km"
-                            }
-                        </Typography>
-                        <Slider
-                            value={fieldDistancia}
-                            onChange={handleSliderDistanciaHook}
-                            valueLabelDisplay="auto"
-                            disableSwap
-                            step={5}
-                            min={0}
-                            max={150}
-                            sx={{ width: mediaQuery ? "500px" : "210px", ml: 2, mr: 2 }}
-                        />
-                        <Typography style={{ display: "flex", alignItems: "center" }}>
-                            {
-                                fieldDistancia[1] != null ? fieldDistancia[1] + " km" : "150 km"
-                            }
-                        </Typography>
-                    </div>
-                    <div className='col-4 d-flex align-items-center'>
-                        <Switch defaultChecked></Switch>
-                        <Typography>Fecha Confirmada</Typography>
-                    </div>
-                </div>
-                <div className='col-12 d-flex justify-content-center' style={{ overflow: "hidden" }}>
-                    <div className='col-8 d-flex align-items-center'>
-                        <Typography style={{ display: "flex", alignItems: "center" }}>
-                            {
-                                fieldDesnivel[0] != null ? fieldDesnivel[0] + " m +" : "0 m +"
-                            }
-                        </Typography>
-                        <Slider
-                            value={fieldDesnivel}
-                            onChange={handleSliderDesnivelHook}
-                            valueLabelDisplay="auto"
-                            disableSwap
-                            step={5}
-                            min={0}
-                            max={3000}
-                            sx={{ width: mediaQuery ? "500px" : "210px", ml: 2, mr: 2 }}
-                        />
-                        <Typography style={{ display: "flex", alignItems: "center" }}>
-                            {
-                                fieldDesnivel[1] != null ? fieldDesnivel[1] + " m +" : "3000 m +"
-                            }
-                        </Typography>
-                    </div>
-                    <div className='col-4 d-flex align-items-center'>
-                        <Button
-                            size="small" variant='contained' style={{backgroundColor: primary}}
-                            endIcon={<Search />}
-                            onClick={onHandleSerchRaces}>
-                            Buscar Carreras
-                        </Button>
-                    </div>
-
                 </div>
             </div>
 

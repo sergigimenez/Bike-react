@@ -27,6 +27,7 @@ export const CardAvatarGroup = ({ stateComents, mediaQuery, isVisible, cardStyle
         onHandleSetTextCard()
     }, [cardLiked])
 
+    console.log(cardLiked)
 
     return (
         <>

@@ -1,5 +1,5 @@
-import {getAuth} from 'firebase/auth'
-import {getFirestore} from 'firebase/firestore/lite'
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore/lite";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -12,18 +12,18 @@ const firebaseConfig = {
   projectId: "journal-app-925db",
   storageBucket: "journal-app-925db.appspot.com",
   messagingSenderId: "86631107965",
-  appId: "1:86631107965:web:541e43f32887b206c09014"
+  appId: "1:86631107965:web:541e43f32887b206c09014",
 };
 
 // Initialize Firebase
-export const FirebaseApp = initializeApp(firebaseConfig)
+export const FirebaseApp = initializeApp(firebaseConfig);
 
-export const FirebaseAuth = getAuth(FirebaseApp)
+export const FirebaseAuth = getAuth(FirebaseApp);
 
-export const FirebaseDB = getFirestore(FirebaseApp)
+export const FirebaseDB = getFirestore(FirebaseApp);
 
 export const initConfigFacebook = () => {
-  window.fbAsyncInit = function () {
+  /*window.fbAsyncInit = function () {
       FB.init({
           appId: '873414750440759',
           cookie: true,
@@ -41,5 +41,5 @@ export const initConfigFacebook = () => {
       js = d.createElement(s); js.id = id;
       js.src = "https://connect.facebook.net/en_US/sdk.js";
       fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-}
+  }(document, 'script', 'facebook-jssdk'));*/
+};

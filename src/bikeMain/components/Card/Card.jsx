@@ -75,13 +75,13 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
     const onFormatData = (keyElement, valueInfo) => {
         if (keyElement == "Distancia") {
             valueInfo = valueInfo.map((value, index) => {
-                return valueInfo.length - 1 != index ? value + "/" : value + " km"
+                return valueInfo.length - 1 != index ? value + " / " : value + " km"
             }).toString().replaceAll(",", '')
         }
 
         if (keyElement == "Desnivel") {
             valueInfo = valueInfo.map((value, index) => {
-                return valueInfo.length - 1 != index ? value + "/" : value + " mts +"
+                return valueInfo.length - 1 != index ? value + " / " : value + " mts +"
             }).toString().replaceAll(",", '')
         }
 
@@ -178,12 +178,12 @@ export const Card = ({ theme, route, cardStyleMobile }) => {
                                 ) {
                                     return (
                                         <li
-                                            className="list-group-item d-flex flex-column align-items-end justify-content-center"
-                                            style={{ borderLeft: 0, borderTop: 0, borderBottom: 0, height: "50px", padding: "8px 8px" }}
+                                            className="list-group-item d-flex flex-column align-items-start justify-content-start"
+                                            style={{ maxWidth: 80, borderLeft: 0, borderTop: 0, borderBottom: 0, height: "50px", padding: "4px" }}
                                             key={keyElement}
                                         >
-                                            <Typography variant='h6' sx={{ color: title, mb: 0, fontSize: "1rem" }}>{keyElement}</Typography>
-                                            <Typography variant='p' sx={{ fontSize: "0.8rem", mt: "-8px" }}>{onFormatData(keyElement, info[keyElement])}</Typography>
+                                            <Typography variant='h6' sx={{ color: title, mb: 0, fontSize: "0.9rem" }}>{keyElement}</Typography>
+                                            <Typography variant='p' sx={{ fontSize: "0.8rem", mt: "-8px", inlineSize: 75, width: "auto" }}>{onFormatData(keyElement, info[keyElement])}</Typography>
                                         </li>
                                     )
                                 }

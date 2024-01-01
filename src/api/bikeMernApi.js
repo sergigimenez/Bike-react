@@ -1,21 +1,25 @@
 import axios from "axios";
-import {getEnvVariables} from "../getEnvVairables.js";
+import { useSelector } from "react-redux";
+import { getEnvVariables } from "../getEnvVairables.js";
 
-const {VITE_API_URL, VITE_API_URL_PROD} = getEnvVariables()
+const { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_API_URL_PROD } = getEnvVariables();
+
+let baseUrlConnection = NEXT_PUBLIC_API_URL; //localStorage.getItem('admin') ? NEXT_PUBLIC_API_URL : NEXT_PUBLIC_API_URL_PROD
 
 const bikeMernApi = axios.create({
-    baseURL: VITE_API_URL,
-    //baseURL: VITE_API_URL_PROD
-})
+  //baseURL: NEXT_PUBLIC_API_URL,
+  //baseURL: NEXT_PUBLIC_API_URL_PROD
+  baseURL: baseUrlConnection,
+});
 
-bikeMernApi.interceptors.request.use(config => {
-    config.headers = {
-        ...config.headers,
-        'x-token' : localStorage.getItem('token'),
-        'x-debug': 1 //TODO QUITAR
-    }
+bikeMernApi.interceptors.request.use((config) => {
+  config.headers = {
+    ...config.headers,
+    "x-token": localStorage.getItem("token"),
+    "x-debug": 1, //TODO QUITAR
+  };
 
-    return config
-})
+  return config;
+});
 
 export default bikeMernApi;

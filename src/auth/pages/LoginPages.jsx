@@ -1,26 +1,32 @@
-import { Apple, Facebook, Google } from "@mui/icons-material"
-import { Button, Grid, Link, TextField, Typography } from "@mui/material"
-import { AuthLayout } from "../layout/AuthLayout"
-import { Link as RouterLink } from 'react-router-dom'
-import { useForm } from "../../hooks/useForm"
-import {useEffect, useState} from "react"
-import { startGoogleSignIn, startLoginWithEmailPassword, startFacebookSignIn } from "../../store/auth/thunks"
-import { useDispatch, useSelector } from "react-redux"
+import { Apple, Facebook, Google } from "@mui/icons-material";
+import { Button, Grid, Link, TextField, Typography } from "@mui/material";
+import { AuthLayout } from "../layout/AuthLayout";
+import { Link as RouterLink } from "next/link";
+import { useForm } from "../../hooks/useForm";
+import { useEffect, useState } from "react";
+import {
+  startGoogleSignIn,
+  startLoginWithEmailPassword,
+  startFacebookSignIn,
+} from "../../store/auth/thunks";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import {Loader} from "../../routes/Loader";
+import { Loader } from "../../routes/Loader";
 
 const formData = {
-  email: '',
-  password: '',
-}
+  email: "",
+  password: "",
+};
 
 const formValidations = {
-  email: [(value) => value.includes('@'), 'el correo debe tener una @'],
-  password: [(value) => value.length >= 6, 'el password debe de tener mas de 6 letras'],
-}
+  email: [(value) => value.includes("@"), "el correo debe tener una @"],
+  password: [
+    (value) => value.length >= 6,
+    "el password debe de tener mas de 6 letras",
+  ],
+};
 
 export const LoginPages = () => {
-
   const {
     formState,
     email,
@@ -30,44 +36,43 @@ export const LoginPages = () => {
     passwordValid,
     onInputChange,
     onResetForm,
-  } = useForm(formData, formValidations)
+  } = useForm(formData, formValidations);
 
-  const [isSubmited, setSubmited] = useState(false)
-  const {primary, secondary} = useSelector(state => state.theme)
-  const {errorMessage, status} = useSelector(state => state.auth)
+  const [isSubmited, setSubmited] = useState(false);
+  const { primary, secondary } = useSelector((state) => state.theme);
+  const { errorMessage, status } = useSelector((state) => state.auth);
 
   const onSubmit = (event) => {
     event.preventDefault();
-    setSubmited(true)
-    if (!isFormValid) return
-  }
+    setSubmited(true);
+    if (!isFormValid) return;
+  };
 
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const onGoogleSignIn = () => {
-    dispatch(startGoogleSignIn())
-  }
+    dispatch(startGoogleSignIn());
+  };
 
   const onFacebookSignIn = () => {
-    dispatch(startFacebookSignIn())
-  }
+    dispatch(startFacebookSignIn());
+  };
 
   const onStartLoginWithEmailPassword = () => {
-    if (!isFormValid) return
-    dispatch(startLoginWithEmailPassword(formState))
-  }
+    if (!isFormValid) return;
+    dispatch(startLoginWithEmailPassword(formState));
+  };
 
   useEffect(() => {
-    if(errorMessage !== undefined){
-      Swal.fire('Error en el login', errorMessage, 'error')
+    if (errorMessage !== undefined) {
+      Swal.fire("Error en el login", errorMessage, "error");
     }
-  },[errorMessage])
+  }, [errorMessage]);
 
   return (
     <AuthLayout title="Login">
       <form onSubmit={onSubmit}>
         <Grid container>
-          <Grid item xs={12} sx={{ mt: 2 }} >
+          <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
               fullWidth
               variant="filled"
@@ -81,7 +86,7 @@ export const LoginPages = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sx={{ mt: 2 }} >
+          <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
               fullWidth
               variant="filled"
@@ -95,25 +100,41 @@ export const LoginPages = () => {
             />
           </Grid>
 
-          <Grid container sx={{ mb: 2, mt: 1 }} spacing={2} >
+          <Grid container sx={{ mb: 2, mt: 1 }} spacing={2}>
             <Grid item xs={12}>
               <Button
-                      variant="contained" fullWidth type='sumbit'
-                      sx={{backgroundColor: primary}} onClick={onStartLoginWithEmailPassword}>
+                variant="contained"
+                fullWidth
+                type="sumbit"
+                sx={{ backgroundColor: primary }}
+                onClick={onStartLoginWithEmailPassword}
+              >
                 <Typography>Sign In</Typography>
               </Button>
             </Grid>
 
-            <Grid item xs={12} sx={{display: "flex", justifyContent: "space-between"}}>
-              <Button variant="contained" onClick={onGoogleSignIn} sx={{backgroundColor: primary}}>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Button
+                variant="contained"
+                onClick={onGoogleSignIn}
+                sx={{ backgroundColor: primary }}
+              >
                 <Google />
                 <Typography sx={{ ml: 1 }}>Google</Typography>
               </Button>
-              <Button variant="contained" onClick={onFacebookSignIn} sx={{backgroundColor: primary}}>
+              <Button
+                variant="contained"
+                onClick={onFacebookSignIn}
+                sx={{ backgroundColor: primary }}
+              >
                 <Facebook />
                 <Typography sx={{ ml: 1 }}>Facebook</Typography>
               </Button>
-              <Button variant="contained" sx={{backgroundColor: primary}}>
+              <Button variant="contained" sx={{ backgroundColor: primary }}>
                 <Apple />
                 <Typography sx={{ ml: 1 }}>Apple</Typography>
               </Button>
@@ -121,12 +142,20 @@ export const LoginPages = () => {
           </Grid>
 
           <Grid container justifyContent="space-between">
-            <Link component={RouterLink} to="/auth/register" variant="subtitle2" sx={{color: secondary}}>Crear una cuenta</Link>
-            <Link variant="subtitle2" sx={{color: secondary}} >¿Has olvidado tu contraseña?</Link>
+            <Link
+              component={RouterLink}
+              href="/auth/register"
+              variant="subtitle2"
+              sx={{ color: secondary }}
+            >
+              Crear una cuenta
+            </Link>
+            <Link variant="subtitle2" sx={{ color: secondary }}>
+              ¿Has olvidado tu contraseña?
+            </Link>
           </Grid>
         </Grid>
       </form>
     </AuthLayout>
-  )
-}
-
+  );
+};

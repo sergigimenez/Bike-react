@@ -9,8 +9,8 @@ export const useSerch = () => {
     const [fieldProvincias, setFieldProvincias] = useState([])
     const [fieldPoblaciones, setFieldPoblaciones] = useState([])
     const [fieldTitleCarreras, setFieldTitleCarreras] = useState([])
-    const [fieldDistancia, setDistancia] = useState([null, null])
-    const [fieldDesnivel, setDesnivel] = useState([null, null])
+    const [fieldDistancia, setDistancia] = useState([0, 150])
+    const [fieldDesnivel, setDesnivel] = useState([0, 3000])
 
     const minDesnivel = 100
     const minDistancia = 5

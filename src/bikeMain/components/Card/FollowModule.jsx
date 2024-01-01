@@ -2,36 +2,36 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { Box, IconButton, Popper, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { followCardByUser, unfollowCardByUser} from "../../../store/Card/thunks"
+import { followCardByUser, unfollowCardByUser } from "../../../store/Card/thunks"
 
-export const FollowModule = ({primary,secondary, titleCard, id}) => {
+export const FollowModule = ({ primary, secondary, titleCard, id }) => {
 
     const user = useSelector(state => state.auth)
     const [anchorElement, setAnchorElement] = useState(null)
     const [statusCard, setStatusCard] = useState(null)
     const dispatch = useDispatch()
 
-    function isStatusCard(idCard){
-       return !!user.cards.find(cardUser => {return cardUser.id == idCard}) ? 'follow' : 'unfollow'
+    function isStatusCard(idCard) {
+        return !!user.cards.find(cardUser => { return cardUser.id == idCard }) ? 'follow' : 'unfollow'
     }
 
-    function onHandleMouseEnter(idCard, event){
+    function onHandleMouseEnter(idCard, event) {
         setAnchorElement(anchorElement ? null : event.currentTarget)
-        if(typeof user.cards.find(cardUser => {return cardUser.id == idCard}) != 'undefined'){
+        if (typeof user.cards.find(cardUser => { return cardUser.id == idCard }) != 'undefined') {
             setStatusCard("unfollow")
-        }else{
+        } else {
             setStatusCard("follow")
         }
     }
-    
-    function onHandleMouseLeave(idCard, event){
+
+    function onHandleMouseLeave(idCard, event) {
         setAnchorElement(null)
     }
 
-    function onHandleClickFollow(idCard, event){
-        if(typeof user.cards.find(cardUser => {return cardUser.id == idCard}) != 'undefined'){
+    function onHandleClickFollow(idCard, event) {
+        if (typeof user.cards.find(cardUser => { return cardUser.id == idCard }) != 'undefined') {
             dispatch(unfollowCardByUser(idCard));
-        }else{
+        } else {
             dispatch(followCardByUser(idCard));
         }
     }
@@ -40,17 +40,20 @@ export const FollowModule = ({primary,secondary, titleCard, id}) => {
         <>
             <div className='col-12 d-flex flex-row justify-content-between align-items-center'>
                 <Typography variant='h6' sx={{ color: primary, fontSize: "1.15rem" }}>{titleCard}</Typography>
-                <IconButton
-                    style={{ color: 'black' }} aria-label="upload picture" component="label"
-                    onMouseEnter={(event) => { onHandleMouseEnter(id, event) }}
-                    onMouseLeave={(event) => { onHandleMouseLeave(id, event) }}
-                    onClick={(event) => { onHandleClickFollow(id, event) }}
-                >
-                    {
-                        isStatusCard(id) == "follow" ? (<VisibilityOff />) : (<Visibility />)
-                    }
+                {
+                    (user.admin) &&
+                    <IconButton
+                        style={{ color: 'black' }} aria-label="upload picture" component="label"
+                        onMouseEnter={(event) => { onHandleMouseEnter(id, event) }}
+                        onMouseLeave={(event) => { onHandleMouseLeave(id, event) }}
+                        onClick={(event) => { onHandleClickFollow(id, event) }}
+                    >
+                        {
+                            isStatusCard(id) == "follow" ? (<VisibilityOff />) : (<Visibility />)
+                        }
 
-                </IconButton>
+                    </IconButton>
+                }
                 {
                     (anchorElement != null) &&
                     (

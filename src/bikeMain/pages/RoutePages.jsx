@@ -44,17 +44,22 @@ export const RoutePages = () => {
     setNumPage(value)
   }
 
-
   return (
     <>
       <title>Carreras (BTT / MTB)</title>
       <BikeLayout title={'route'}>
 
         <Searcher numPage={numPage} routes={routes} />
-          {<div>{CardMemorized}</div>}
+        {<div>{CardMemorized}</div>}
 
-        <Stack spacing={2}>
-          <Pagination count={pages} showFirstButton showLastButton page={numPage} onChange={handleChangeNumPage} />
+        <Stack spacing={1}>
+          <Pagination
+            count={pages == 45 ? 45 : Math.ceil(pages / 25)}
+            showFirstButton
+            showLastButton
+            page={numPage}
+            onChange={handleChangeNumPage}
+            siblingCount={0} boundaryCount={1} />
         </Stack>
       </BikeLayout>
     </>
