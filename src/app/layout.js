@@ -2,7 +2,8 @@ import "../variables.scss";
 import "@fontsource/roboto";
 import "material-icons/iconfont/material-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
-import { Providers } from "./StoreProvider";
+import "../style.css";
+import { Providers } from "../store/StoreProvider";
 
 export const metadata = {
   title: "My App",
