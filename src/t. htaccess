@@ -1,0 +1,2 @@
+# [[...*]] is necessary for dynamically matched routes in static generation of next
+DirectoryIndex index.html [[...adventureId]].html
