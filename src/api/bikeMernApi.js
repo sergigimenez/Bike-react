@@ -4,7 +4,7 @@ import { getEnvVariables } from "../getEnvVairables.js";
 
 const { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_API_URL_PROD } = getEnvVariables();
 
-let baseUrlConnection = NEXT_PUBLIC_API_URL; //localStorage.getItem('admin') ? NEXT_PUBLIC_API_URL : NEXT_PUBLIC_API_URL_PROD
+let baseUrlConnection = "https://bike-mern.herokuapp.com/api"; //localStorage.getItem('admin') ? NEXT_PUBLIC_API_URL : NEXT_PUBLIC_API_URL_PROD
 
 const bikeMernApi = axios.create({
   //baseURL: NEXT_PUBLIC_API_URL,
