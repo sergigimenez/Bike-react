@@ -39,6 +39,7 @@ export async function getStaticProps({ params }) {
 }*/
 
 export default async function Page({ params, id }) {
+  console.log("tets");
   const { slug } = params;
   const card = await fecthData(slug);
   const { titleCard } = card.msg[0];
